@@ -1,7 +1,6 @@
 // generated on 2016-10-13 using generator-chrome-extension 0.6.1
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
-import bower from 'gulp-bower'
 import del from 'del';
 import runSequence from 'run-sequence';
 import {stream as wiredep} from 'wiredep';
@@ -89,17 +88,21 @@ gulp.task('babel', () => {
 });
 
 gulp.task('bower', function() {
-  return bower();
+  return $.bower();
 });
 
 gulp.task('dependencies', () => {
-  return gulp.src('app/bower_components/jquery/dist/jquery.min.*')
+  var sjcl = gulp.src('app/bower_components/sjcl/sjcl.js')
+       .pipe(gulp.dest('app/libs/js/sjcl'));
+  var jquery = gulp.src('app/bower_components/jquery/dist/jquery.min.*')
       .pipe(gulp.dest('app/libs/js/jquery'));
+
+  return $.merge(sjcl, jquery);
 });
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('watch', ['lint', 'babel'], () => {
+gulp.task('watch', ['bower', 'dependencies', 'lint', 'babel'], () => {
   $.livereload.listen();
 
   gulp.watch([
