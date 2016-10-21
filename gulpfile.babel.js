@@ -1,6 +1,7 @@
 // generated on 2016-10-13 using generator-chrome-extension 0.6.1
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
+import bower from 'gulp-bower'
 import del from 'del';
 import runSequence from 'run-sequence';
 import {stream as wiredep} from 'wiredep';
@@ -87,6 +88,10 @@ gulp.task('babel', () => {
       .pipe(gulp.dest('app/scripts'));
 });
 
+gulp.task('bower', function() {
+  return bower();
+});
+
 gulp.task('dependencies', () => {
   return gulp.src('app/bower_components/jquery/dist/jquery.min.*')
       .pipe(gulp.dest('app/libs/js/jquery'));
@@ -130,7 +135,7 @@ gulp.task('package', function () {
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'babel', 'dependencies', 'chromeManifest',
+    'lint', 'babel', 'bower', 'dependencies', 'chromeManifest',
     ['html', 'images', 'extras'],
     'size', cb);
 });
