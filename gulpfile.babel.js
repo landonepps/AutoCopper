@@ -87,6 +87,11 @@ gulp.task('babel', () => {
       .pipe(gulp.dest('app/scripts'));
 });
 
+gulp.task('dependencies', () => {
+  return gulp.src('app/bower_components/jquery/dist/jquery.min.*')
+      .pipe(gulp.dest('app/libs/js/jquery'));
+});
+
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 gulp.task('watch', ['lint', 'babel'], () => {
@@ -125,7 +130,7 @@ gulp.task('package', function () {
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'babel', 'chromeManifest',
+    'lint', 'babel', 'dependencies', 'chromeManifest',
     ['html', 'images', 'extras'],
     'size', cb);
 });
