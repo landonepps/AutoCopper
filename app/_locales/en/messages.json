@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "My Supreme Bot",
+    "message": "AutoCopper",
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "My Supreme Bot",
+    "message": "AutoCopper is a checkout bot for Supreme",
     "description": "The description of the application"
   }
 }

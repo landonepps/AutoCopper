@@ -1,40 +1,98 @@
 <!doctype html>
 <html>
-  <head>
-    <!-- build:css styles/options-vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css styles/main.css -->
-    <link href="styles/main.css" rel="stylesheet">
-    <!-- endbuild -->
-  </head>
-  <body>
-    <h1>Japan</h1>
-    <div><label>Last Name</label><input id="last-name" type="text"></div>
-    <div><label>First Name</label><input id="first-name" type="text"></div>
-    <div><label>Email</label><input id="email" type="text"></div>
-    <div><label>Phone</label><input id="phone" type="text"></div>
-    <div><label>State</label><input id="state" type="text"></div>
-    <div><label>City</label><input id="city" type="text"></div>
-    <div><label>Address</label><input id="address" type="text"></div>
-    <div><label>Zip</label><input id="zip" type="text"></div>
-    <div><label>Card Type</label><input id="card-type" type="text"></div>
-    <div><label>Credit Card</label><input id="card" type="text"></div>
-    <div><label>Exp Month</label><input id="exp-month" type="text"></div>
-    <div><label>Exp Year</label><input id="exp-year" type="text"></div>
-    <div><label>CVV</label><input id="cvv" type="text"></div>
-    <div id="status"></div>
-    <button id="save">Save</button>
 
-    <!-- build:js scripts/options-vendor.js -->
-    <!-- bower:js -->
-    <!-- endbower -->
-    <script src="libs/js/sjcl/sjcl.js"></script>
-    <!-- endbuild -->
+<head>
+  <!-- build:css styles/options-vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/pure/pure-nr.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css styles/main.css -->
+  <link href="styles/main.css" rel="stylesheet">
+  <!-- endbuild -->
+</head>
 
-    <!-- build:js scripts/options.js -->
-    <script src="scripts/options.js"></script>
-    <!-- endbuild -->
-  </body>
+<body class="options">
+  <h1>Checkout Information</h1>
+  <div class="pure-form pure-form-stacked">
+    <fieldset>
+      <div class="pure-g">
+        <div class="pure-u-1-2">
+          <div class="pure-control-group">
+            <label>Last Name</label>
+            <input class="pure-input-2-3" id="last-name" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>First Name</label>
+            <input class="pure-input-2-3" id="first-name" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>Email</label>
+            <input class="pure-input-2-3" id="email" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>Phone</label>
+            <input class="pure-input-2-3" id="phone" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>State</label>
+            <input class="pure-input-2-3" id="state" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>City</label>
+            <input class="pure-input-2-3" id="city" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>Address</label>
+            <input class="pure-input-2-3" id="address" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>Zip</label>
+            <input class="pure-input-2-3" id="zip" type="text">
+          </div>
+        </div>
+        <div class="pure-u-1-2">
+          <div class="pure-control-group">
+            <label>Card Type</label>
+            <input class="pure-input-2-3" id="card-type" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>Credit Card</label>
+            <input class="pure-input-2-3" id="card" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>Exp Month</label>
+            <input class="pure-input-2-3" id="exp-month" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>Exp Year</label>
+            <input class="pure-input-2-3" id="exp-year" type="text">
+          </div>
+          <div class="pure-control-group">
+            <label>CVV</label>
+            <input class="pure-input-2-3" id="cvv" type="text">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="pure-controls">
+      <button id="save" class="pure-button pure-button-primary">Save</button>
+      <div id="status">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- build:js scripts/options-vendor.js -->
+  <!-- bower:js -->
+  <!-- endbower -->
+  <script src="libs/js/sjcl/sjcl.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js scripts/options.js -->
+  <script src="scripts/options.js"></script>
+  <!-- endbuild -->
+</body>
+
 </html>

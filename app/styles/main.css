@@ -1,13 +1,23 @@
-body {
-  padding: 40px;
-  min-width: 200px;
+body.options {
+  padding: 5px 0 40px 40px;
+  min-width: 500px;
+  min-height: auto;
 }
 
-label {
-  width: 30%;
-  float: left;
+body.popup {
+  margin: 0px;
+  min-width: 350px;
 }
 
-input[type="text"] {
-  width:70%;
+main {
+  margin: 20px;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.25);
+}
+
+div#status {
+  margin-left: 15px;
+  display: inline-block;
 }

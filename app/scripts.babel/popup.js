@@ -3,7 +3,9 @@
 var optionData = ["keyword", "color", "searchEnabled"];
 
 function hyphenate(text) {
-  return text.replace(/([a-z][A-Z])/g, function (g) { return g[0] + '-' + g[1].toLowerCase() })
+  return text.replace(/([a-z][A-Z])/g, function(g) {
+    return g[0] + '-' + g[1].toLowerCase()
+  })
 }
 
 // Saves options to chrome.storage.local
@@ -12,14 +14,17 @@ function save_options() {
 
   newOptions["keyword"] = document.getElementById("keyword").value;
   newOptions["color"] = document.getElementById("color").value;
+  newOptions["size"] = document.getElementById("size").value;
   newOptions["searchEnabled"] = document.getElementById("search-enabled").checked;
 
   // save to storage
-  chrome.storage.local.set({searchOptions: newOptions}, function() {
+  chrome.storage.local.set({
+    searchOptions: newOptions
+  }, function() {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
     status.textContent = 'Options saved.';
-    setTimeout(function(){
+    setTimeout(function() {
       status.textContent = '';
     }, 1000);
   });
@@ -27,11 +32,13 @@ function save_options() {
 
 function restore_options() {
   chrome.storage.local.get(['searchOptions'], function(results) {
-    var options = results.searchOptions;
-
-    document.getElementById("keyword").value = options["keyword"];
-    document.getElementById("color").value = options["color"];
-    document.getElementById("search-enabled").checked = options["searchEnabled"];
+    var searchOptions = results.searchOptions;
+    if (searchOptions != undefined) {
+      document.getElementById("keyword").value = searchOptions["keyword"];
+      document.getElementById("color").value = searchOptions["color"];
+      document.getElementById("size").value = searchOptions["size"];
+      document.getElementById("search-enabled").checked = searchOptions["searchEnabled"];
+    }
   });
 }
 

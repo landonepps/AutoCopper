@@ -132,7 +132,7 @@ gulp.task('wiredep', () => {
 gulp.task('package', function () {
   var manifest = require('./dist/manifest.json');
   return gulp.src('dist/**')
-      .pipe($.zip('my supreme bot-' + manifest.version + '.zip'))
+      .pipe($.zip('AutoCopper-' + manifest.version + '.zip'))
       .pipe(gulp.dest('package'));
 });
 

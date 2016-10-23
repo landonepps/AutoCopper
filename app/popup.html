@@ -1,33 +1,60 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <!-- build:css styles/popup-vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css styles/main.css -->
-    <link href="styles/main.css" rel="stylesheet">
-    <!-- endbuild -->
-  </head>
-  <body>
-    <h1>Search</h1>
 
-    <div><label>Keyword</label>
-    <input id="keyword" type="text"></div>
-    <div><label>Color</label>
-    <input id="color" type="text"></div>
-    <div><input id="search-enabled" type="checkbox">enable</input></div>
-    <div id="status"></div>
-    <button id="save" type="button">Save</button>
+<head>
+  <meta charset="utf-8">
+  <!-- build:css styles/popup-vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/pure/pure-nr.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css styles/main.css -->
+  <link href="styles/main.css" rel="stylesheet">
+  <!-- endbuild -->
+</head>
 
-    <!-- build:js scripts/popup-vendor.js -->
-    <!-- bower:js -->
-    <!-- endbower -->
-    <!-- endbuild -->
+<body class="popup">
+  <img src="images/banner@2x.png" width="350" height="140">
+  <main>
+    <div class="pure-form pure-form-aligned">
+      <fieldset>
+        <div class="pure-control-group">
+          <label for="keyword">Keyword</label>
+          <input id="keyword" type="text">
+        </div>
+        <div class="pure-control-group">
+          <label for="color">Color</label>
+          <input id="color" type="text">
+        </div>
+        <div class="pure-control-group">
+          <label for="size">Size</label>
+          <select id="size">
+          <option>Small</option>
+          <option>Medium</option>
+          <option>Large</option>
+          <option>XLarge</option>
+        </select>
+        </div>
+        <div class="pure-control-group">
+          <label for="search-enabled">Search</label>
+          <input id="search-enabled" type="checkbox">
+        </div>
+        <div class="pure-controls">
+          <button id="save" class="pure-button pure-button-primary">Save</button>
+          <div id="status"></div>
+        </div>
+      </fieldset>
+    </div>
+  </main>
 
-    <!-- build:js scripts/popup.js -->
-    <script src="scripts/popup.js"></script>
-    <!-- endbuild -->
-  </body>
+  <!-- build:js scripts/popup-vendor.js -->
+  <!-- bower:js -->
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:js scripts/popup.js -->
+  <script src="scripts/popup.js"></script>
+  <!-- endbuild -->
+</body>
+
 </html>

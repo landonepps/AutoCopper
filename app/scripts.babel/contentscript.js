@@ -5,37 +5,102 @@ $(".sold_out_tag").toggle();
 
 let shopUrl = "http://www.supremenewyork.com";
 
-// var itemRegex, colorRegex;
+var itemRegex;
+var colorRegex;
+
+// if on view all page
+
 
 chrome.storage.local.get(['searchOptions'], function(results) {
-  var options = results.searchOptions;
+  var itemOptions = results.searchOptions;
 
-  if (options.searchEnabled === true) {
-    var itemRegex = new RegExp(options.keyword, "i");
-    var colorRegex = new RegExp(options.color, "i");
+  if ($(document.body).hasClass("view-all")) {
+    console.log("on view all page");
+    if (itemOptions.searchEnabled === true) {
+      console.log("searchEnabled = " + itemOptions.searchEnabled);
+      itemRegex = new RegExp(itemOptions.keyword, "i");
+      colorRegex = new RegExp(itemOptions.color, "i");
+      searchLinks();
+    }
+  }
 
-    if (window.location.href.indexOf("all") != -1) {
-      var links = [];
-      $('article a[href]').each(function() {
-        links.push($(this).attr('href'));
-      });
-      searchLinks(links, itemRegex, colorRegex);
+  if ($(document.body).hasClass("show")) {
+    console.log("on item page");
+
+    // select desired size
+    // TODO: Only works with Small Medium Large XLarge
+    var sizeOptions = document.querySelectorAll("option");
+    var sizeValue;
+
+    sizeOptions.forEach(function(element, index) {
+      if (element.textContent === itemOptions.size) {
+        element.selected = true;
+        sizeValue = element.value;
+      }
+    });
+
+    if ($("#size").val() === sizeValue) {
+      console.log("size matches, check out");
+      $('input[type="submit"]').click();
+
+      var cartCheck = setInterval(function () {
+        var cart = $('cart.hidden');
+
+        console.log(cart.length)
+        if (cart.length === 0) {
+          console.log("cart here");
+          clearInterval(cartCheck);
+          window.location = shopUrl + "/shop/cart";
+        } else {
+          console.log("cart not loaded yet");
+        }
+      }, 10);
     }
   }
 });
 
-function searchLinks(links, itemRegex, colorRegex) {
+
+// if on item page
+
+
+function searchLinks() {
+  console.log("searchLinks()");
+
+  var itemFound = false;
+  var links = [];
+  $('article a[href]').each(function() {
+    links.push($(this).attr('href'));
+  });
+
+  // keep track of checked links
+  var checkedLinkCount = 0;
+
   $(links).each(function(index, link) {
-    var request = $.get(link, null, function(data, textStatus) {
-      if (data) {
-        var name = $(data).find('[itemprop="name"]:first').text();
+    // get the html
+    var request = $.get(link, null, function(html, textStatus) {
+      if (html) {
+        var name = $(html).find('[itemprop="name"]:first').text();
         if (itemRegex.test(name)) {
-          var color = $(data).find('[itemprop="model"]:first').text();
+          var color = $(html).find('[itemprop="model"]:first').text();
           if (colorRegex.test(color)) {
+            // if name and color match, then we found it!
+            itemFound = true;
             console.log(name + " " + color)
             console.log(link);
+            // load the page
             window.location = shopUrl + link;
           }
+        }
+
+        // we checked a link, so increment the count
+        checkedLinkCount++;
+
+        // if we checked all the links and didn't find it, refresh
+        if (checkedLinkCount === links.length && itemFound === false) {
+          console.log("item not found");
+          setTimeout(function() {
+            window.location.reload()
+          }, 100 + 100 * Math.random());
         }
       }
     });
