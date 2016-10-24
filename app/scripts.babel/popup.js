@@ -3,7 +3,7 @@
 var optionData = ["keyword", "color", "searchEnabled"];
 
 function hyphenate(text) {
-  return text.replace(/([a-z][A-Z])/g, function(g) {
+  return text.replace(/([a-z][A-Z])/g, g => {
     return g[0] + '-' + g[1].toLowerCase()
   })
 }
@@ -18,20 +18,18 @@ function save_options() {
   newOptions["searchEnabled"] = document.getElementById("search-enabled").checked;
 
   // save to storage
-  chrome.storage.local.set({
-    searchOptions: newOptions
-  }, function() {
+  chrome.storage.local.set({ searchOptions: newOptions }, () => {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
     status.textContent = 'Options saved.';
-    setTimeout(function() {
+    setTimeout(() => {
       status.textContent = '';
     }, 1000);
   });
 }
 
 function restore_options() {
-  chrome.storage.local.get(['searchOptions'], function(results) {
+  chrome.storage.local.get(['searchOptions'], results => {
     var searchOptions = results.searchOptions;
     if (searchOptions != undefined) {
       document.getElementById("keyword").value = searchOptions["keyword"];
