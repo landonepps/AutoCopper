@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -15,8 +15,8 @@
   },
   "permissions": [
     "tabs",
-    "http://*.supremenewyork.com/shop/*",
-    "https://*.supremenewyork.com/shop/*",
+    "http://*.supremenewyork.com/*",
+    "https://*.supremenewyork.com/*",
     "storage",
     "webNavigation",
     "webRequest"
@@ -28,10 +28,11 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*.supremenewyork.com/shop/*",
-        "https://*.supremenewyork.com/shop/*"
+        "http://*.supremenewyork.com/*",
+        "https://*.supremenewyork.com/*"
       ],
       "js": [
+        "libs/js/sjcl/sjcl.js",
         "libs/js/jquery/jquery.min.js",
         "scripts/contentscript.js"
       ],

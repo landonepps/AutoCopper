@@ -64,7 +64,7 @@ gulp.task('html',  () => {
 gulp.task('chromeManifest', () => {
   return gulp.src('app/manifest.json')
     .pipe($.chromeManifest({
-      buildnumber: true,
+      // buildnumber: true,
       background: {
         target: 'scripts/background.js',
         exclude: [
@@ -131,7 +131,8 @@ gulp.task('wiredep', () => {
 
 gulp.task('package', function () {
   var manifest = require('./dist/manifest.json');
-  return gulp.src('dist/**')
+  return gulp.src(['dist/**', '!**/*.js.map'])
+      .pipe($.if('*.js', $.streamify($.packer({base62: true, shrink: true}))))
       .pipe($.zip('AutoCopper-' + manifest.version + '.zip'))
       .pipe(gulp.dest('package'));
 });
