@@ -12,7 +12,9 @@
   },
   "overrides": {
     "pure": {
-      "main": ["./pure-nr.css"]
+      "main": [
+        "./pure-nr.css"
+      ]
     }
   }
 }

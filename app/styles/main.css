@@ -1,12 +1,20 @@
 body.options {
   padding: 5px 0 40px 40px;
-  min-width: 500px;
+  min-width: 600px;
   min-height: auto;
 }
 
 body.popup {
   margin: 0px;
   min-width: 350px;
+}
+
+#options-form label {
+  margin-top: 7px;
+}
+
+#options-form input:not(#cvv):not(#card) {
+  width: 90%;
 }
 
 main {

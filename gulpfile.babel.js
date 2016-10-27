@@ -53,10 +53,11 @@ gulp.task('images', () => {
 gulp.task('html',  () => {
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
-    .pipe($.sourcemaps.init())
+    // .pipe($.sourcemaps.init())
+    .pipe($.if('*.js', $.gnirts()))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.cleanCss({compatibility: '*'})))
-    .pipe($.sourcemaps.write())
+    // .pipe($.sourcemaps.write())
     .pipe($.if('*.html', $.htmlmin({removeComments: true, collapseWhitespace: true})))
     .pipe(gulp.dest('dist'));
 });
@@ -73,9 +74,10 @@ gulp.task('chromeManifest', () => {
       }
   }))
   .pipe($.if('*.css', $.cleanCss({compatibility: '*'})))
-  .pipe($.if('*.js', $.sourcemaps.init()))
+  // .pipe($.if('*.js', $.sourcemaps.init()))
+  .pipe($.if('*.js', $.gnirts()))
   .pipe($.if('*.js', $.uglify()))
-  .pipe($.if('*.js', $.sourcemaps.write('.')))
+  // .pipe($.if('*.js', $.sourcemaps.write('.')))
   .pipe(gulp.dest('dist'));
 });
 
@@ -132,7 +134,23 @@ gulp.task('wiredep', () => {
 gulp.task('package', function () {
   var manifest = require('./dist/manifest.json');
   return gulp.src(['dist/**', '!**/*.js.map'])
-      .pipe($.if('*.js', $.streamify($.packer({base62: true, shrink: true}))))
+
+      // packer doesn't work
+      // .pipe($.if('scripts/options.js', $.streamify($.packer({base62: true, shrink: false}))))
+      // .pipe($.if('scripts/options.min.js', $.rename((path) => {
+      //   path.basename = path.basename.replace(".min", "");
+      //   return path;
+      // })))
+      // .pipe($.closureCompiler({
+      //    // compilerPath: 'bower_components/closure-compiler/compiler.jar',
+      //    fileName: 'build.js',
+      //    compilerFlags: {
+      //      closure_entry_point: 'app.main',
+      //      compilation_level: 'ADVANCED_OPTIMIZATIONS',
+      //      only_closure_dependencies: true,
+      //      warning_level: 'VERBOSE'
+      //    }
+      //  }))
       .pipe($.zip('AutoCopper-' + manifest.version + '.zip'))
       .pipe(gulp.dest('package'));
 });

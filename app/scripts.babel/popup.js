@@ -16,6 +16,7 @@ function save_options() {
   newOptions["color"] = document.getElementById("color").value;
   newOptions["size"] = document.getElementById("size").value;
   newOptions["searchEnabled"] = document.getElementById("search-enabled").checked;
+  newOptions["checkoutEnabled"] = document.getElementById("checkout-enabled").checked;
 
   // save to storage
   chrome.storage.local.set({ searchOptions: newOptions }, () => {
@@ -36,6 +37,7 @@ function restore_options() {
       document.getElementById("color").value = searchOptions["color"];
       document.getElementById("size").value = searchOptions["size"];
       document.getElementById("search-enabled").checked = searchOptions["searchEnabled"];
+      document.getElementById("checkout-enabled").checked = searchOptions["checkoutEnabled"];
     }
   });
 }

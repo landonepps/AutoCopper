@@ -1,9 +1,21 @@
 'use strict';
 
-var password = 'vSfxY4tKkguBqGCH2U7eA2rm';
 var optionData = ["lastName", "firstName", "email", "phone",
                   "state", "city", "address", "zip",
                   "cardType", "card", "expMonth", "expYear", "cvv"];
+
+
+var date = new Date()
+var startYear = date.getFullYear(),
+    endYear = startYear + 10,
+    expYearSelect = document.getElementById('exp-year');
+
+for (var i = startYear; i <= endYear; i++){
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.innerHTML = i;
+    expYearSelect.appendChild(opt);
+}
 
 function hyphenate(text) {
   return text.replace(/([a-z][A-Z])/g, g => {
@@ -19,8 +31,8 @@ function save_options() {
   })
 
   // encrypt card data
-  newOptions["card"] = sjcl.encrypt(password, newOptions["card"], {mode: "gcm"});
-  newOptions["cvv"] = sjcl.encrypt(password, newOptions["cvv"], {mode: "gcm"});
+  newOptions["card"] = sjcl.encrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, newOptions["card"], {mode: "gcm"});
+  newOptions["cvv"] = sjcl.encrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, newOptions["cvv"], {mode: "gcm"});
 
   // save to storage
   chrome.storage.local.set({options: newOptions}, () => {
@@ -37,8 +49,8 @@ function restore_options() {
   chrome.storage.local.get(['options'], results => {
     var options = results.options;
 
-    options["card"] = sjcl.decrypt(password, options["card"]);
-    options["cvv"] = sjcl.decrypt(password, options["cvv"]);
+    options["card"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, options["card"]);
+    options["cvv"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, options["cvv"]);
 
     for (var index in options) {
       document.getElementById(hyphenate(index)).value = options[index];
