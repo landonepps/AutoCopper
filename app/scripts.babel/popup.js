@@ -17,6 +17,7 @@ function save_options() {
   newOptions["size"] = document.getElementById("size").value;
   newOptions["searchEnabled"] = document.getElementById("search-enabled").checked;
   newOptions["checkoutEnabled"] = document.getElementById("checkout-enabled").checked;
+  newOptions["addToCartEnabled"] = document.getElementById("add-to-cart-enabled").checked;
 
   // save to storage
   chrome.storage.local.set({ searchOptions: newOptions }, () => {
@@ -38,6 +39,7 @@ function restore_options() {
       document.getElementById("size").value = searchOptions["size"];
       document.getElementById("search-enabled").checked = searchOptions["searchEnabled"];
       document.getElementById("checkout-enabled").checked = searchOptions["checkoutEnabled"];
+      document.getElementById("add-to-cart-enabled").checked = searchOptions["addToCartEnabled"];
     }
   });
 }

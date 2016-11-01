@@ -56,13 +56,14 @@ function searchLinks() {
         // we checked a link, so increment the count
         checkedLinkCount++;
 
-        // if we checked all the links and didn't find it, refresh
-        // TODO: refresh might cause banning
+        // // !! too dangerous to enable this yet !!
+        // // if we checked all the links and didn't find it, refresh
+        // // TODO: refresh might cause banning
         // if (checkedLinkCount === links.length && itemFound === false) {
         //   console.log("item not found");
         //   setTimeout(() => {
         //     window.location.reload()
-        //   }, 100 + 100 * Math.random());
+        //   }, 500 + 200 * Math.random());
         // }
       }
     });
