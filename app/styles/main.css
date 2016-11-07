@@ -9,6 +9,41 @@ body.popup {
   min-width: 350px;
 }
 
+#autocopper-header {
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+  height: 30px;
+  font-size: 20px;
+  color: white;
+  background-color: red;
+}
+
+table#autocopper-alert {
+  border: 0px;
+  float: left;
+  text-align: center;
+  font-size: 15px;
+}
+
+table#autocopper-alert td,tr {
+  border-width: 0px;
+  border-collapse: collapse;
+  padding: 2px;
+}
+
+.alert-left {
+  text-align: right;
+  width: 50%;
+}
+
+.alert-right {
+  text-align: left;
+  font-weight: bold;
+  width: 50%;
+  color: red;
+}
+
 #options-form label {
   margin-top: 7px;
 }

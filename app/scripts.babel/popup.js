@@ -20,13 +20,25 @@ function save_options() {
   newOptions["addToCartEnabled"] = document.getElementById("add-to-cart-enabled").checked;
 
   // save to storage
-  chrome.storage.local.set({ searchOptions: newOptions }, () => {
+  chrome.storage.local.set({
+    searchOptions: newOptions
+  }, () => {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
     status.textContent = 'Options saved.';
     setTimeout(() => {
       status.textContent = '';
     }, 1000);
+  });
+
+  chrome.tabs.query({
+    url: ["*://*.supremenewyork.com/*", "*://supremenewyork.com/*"]
+  }, function(tabs) {
+    tabs.forEach( tab => {
+      chrome.tabs.sendMessage(tab.id, {
+        updateHeader: true
+      });
+    });
   });
 }
 

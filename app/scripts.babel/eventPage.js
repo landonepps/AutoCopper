@@ -28,27 +28,33 @@ function injectScripts(e) {
       file: "libs/js/sjcl/sjcl.js",
       runAt: "document_end"
     }, () => {
-      // load the desired scripts
+      // then load header
+      chrome.tabs.executeScript(e.tabId, {
+        file: "scripts/header.js",
+        runAt: "document_end"
+      }, () => {
+        // load the desired scripts
 
-      if (e.url.indexOf("/all") != -1 || e.url.indexOf("/new") != -1) {
-        // if at view all page
-        chrome.tabs.executeScript(e.tabId, {
-          file: "scripts/viewall.js",
-          runAt: "document_end"
-        });
-      } else if (e.url.indexOf("shop/") != -1) {
-        // if at item page
-        chrome.tabs.executeScript(e.tabId, {
-          file: "scripts/item.js",
-          runAt: "document_end"
-        });
-      } else if (e.url.indexOf("/checkout") != -1) {
-        chrome.tabs.executeScript(e.tabId, {
-          // if at checkout page
-          file: "scripts/checkout.js",
-          runAt: "document_end"
-        });
-      }
+        if (e.url.indexOf("/all") != -1 || e.url.indexOf("/new") != -1) {
+          // if at view all page
+          chrome.tabs.executeScript(e.tabId, {
+            file: "scripts/viewall.js",
+            runAt: "document_end"
+          });
+        } else if (e.url.indexOf("shop/") != -1) {
+          // if at item page
+          chrome.tabs.executeScript(e.tabId, {
+            file: "scripts/item.js",
+            runAt: "document_end"
+          });
+        } else if (e.url.indexOf("/checkout") != -1) {
+          chrome.tabs.executeScript(e.tabId, {
+            // if at checkout page
+            file: "scripts/checkout.js",
+            runAt: "document_end"
+          });
+        }
+      });
     });
   });
 }
