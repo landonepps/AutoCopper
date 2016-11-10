@@ -60,10 +60,9 @@ function updateMessage() {
   });
 }
 
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.updateHeader === true) {
     console.log("got update message")
-    if (request.updateHeader === true) {
-      updateMessage();
-    }
-  });
+    updateMessage();
+  }
+});

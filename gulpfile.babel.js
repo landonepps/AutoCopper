@@ -3,7 +3,9 @@ import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
 import runSequence from 'run-sequence';
-import {stream as wiredep} from 'wiredep';
+import {
+  stream as wiredep
+} from 'wiredep';
 
 const $ = gulpLoadPlugins();
 
@@ -14,6 +16,7 @@ gulp.task('extras', () => {
     '!app/scripts.babel',
     '!app/*.json',
     '!app/*.html',
+    '!app/styles.scss'
   ], {
     base: 'app',
     dot: true
@@ -37,28 +40,48 @@ gulp.task('lint', lint('app/scripts.babel/**/*.js', {
 gulp.task('images', () => {
   return gulp.src('app/images/**/*')
     .pipe($.if($.if.isFile, $.cache($.imagemin({
-      progressive: true,
-      interlaced: true,
-      // don't remove IDs from SVGs, they are often used
-      // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
-    }))
-    .on('error', function (err) {
-      console.log(err);
-      this.end();
-    })))
+        progressive: true,
+        interlaced: true,
+        // don't remove IDs from SVGs, they are often used
+        // as hooks for embedding and styling
+        svgoPlugins: [{
+          cleanupIDs: false
+        }]
+      }))
+      .on('error', function(err) {
+        console.log(err);
+        this.end();
+      })))
     .pipe(gulp.dest('dist/images'));
 });
 
-gulp.task('html',  () => {
+gulp.task('styles', () => {
+  return gulp.src('app/styles.scss/*.scss')
+    .pipe($.plumber())
+    .pipe($.sass.sync({
+      outputStyle: 'expanded',
+      precision: 10,
+      includePaths: ['.']
+    }).on('error', $.sass.logError))
+    .pipe(gulp.dest('app/styles'));
+});
+
+gulp.task('html', () => {
   return gulp.src('app/*.html')
-    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
+    .pipe($.useref({
+      searchPath: ['.tmp', 'app', '.']
+    }))
     // .pipe($.sourcemaps.init())
     .pipe($.if('*.js', $.gnirts()))
     .pipe($.if('*.js', $.uglify()))
-    .pipe($.if('*.css', $.cleanCss({compatibility: '*'})))
+    .pipe($.if('*.css', $.cleanCss({
+      compatibility: '*'
+    })))
     // .pipe($.sourcemaps.write())
-    .pipe($.if('*.html', $.htmlmin({removeComments: true, collapseWhitespace: true})))
+    .pipe($.if('*.html', $.htmlmin({
+      removeComments: true,
+      collapseWhitespace: true
+    })))
     .pipe(gulp.dest('dist'));
 });
 
@@ -72,21 +95,23 @@ gulp.task('chromeManifest', () => {
           'scripts/chromereload.js'
         ]
       }
-  }))
-  .pipe($.if('*.css', $.cleanCss({compatibility: '*'})))
-  // .pipe($.if('*.js', $.sourcemaps.init()))
-  .pipe($.if('*.js', $.gnirts()))
-  .pipe($.if('*.js', $.uglify()))
-  // .pipe($.if('*.js', $.sourcemaps.write('.')))
-  .pipe(gulp.dest('dist'));
+    }))
+    .pipe($.if('*.css', $.cleanCss({
+      compatibility: '*'
+    })))
+    // .pipe($.if('*.js', $.sourcemaps.init()))
+    .pipe($.if('*.js', $.gnirts()))
+    .pipe($.if('*.js', $.uglify()))
+    // .pipe($.if('*.js', $.sourcemaps.write('.')))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('babel', () => {
   return gulp.src('app/scripts.babel/**/*.js')
-      .pipe($.babel({
-        presets: ['es2015']
-      }))
-      .pipe(gulp.dest('app/scripts'));
+    .pipe($.babel({
+      presets: ['es2015']
+    }))
+    .pipe(gulp.dest('app/scripts'));
 });
 
 gulp.task('bower', function() {
@@ -95,9 +120,9 @@ gulp.task('bower', function() {
 
 gulp.task('dependencies', () => {
   var sjcl = gulp.src('app/bower_components/sjcl/sjcl.js')
-       .pipe(gulp.dest('app/libs/js/sjcl'));
+    .pipe(gulp.dest('app/libs/js/sjcl'));
   var jquery = gulp.src('app/bower_components/jquery/dist/jquery.min.*')
-      .pipe(gulp.dest('app/libs/js/jquery'));
+    .pipe(gulp.dest('app/libs/js/jquery'));
 
   return $.merge(sjcl, jquery);
 });
@@ -116,14 +141,25 @@ gulp.task('watch', ['bower', 'dependencies', 'lint', 'babel'], () => {
   ]).on('change', $.livereload.reload);
 
   gulp.watch('app/scripts.babel/**/*.js', ['lint', 'babel']);
+  gulp.watch('app/styles.scss/**/*.scss', ['styles']);
   gulp.watch('bower.json', ['wiredep']);
 });
 
 gulp.task('size', () => {
-  return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
+  return gulp.src('dist/**/*').pipe($.size({
+    title: 'build',
+    gzip: true
+  }));
 });
 
 gulp.task('wiredep', () => {
+  gulp.src('app/styles.scss/*.scss')
+    .pipe(wiredep({
+      //ignorePath: /^(\.\.\/)+/
+      //ignorePath: /^(\.\.\/)*\.\./
+    }))
+    .pipe(gulp.dest('app/styles.scss'));
+
   gulp.src('app/*.html')
     .pipe(wiredep({
       ignorePath: /^(\.\.\/)*\.\./
@@ -131,34 +167,33 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('package', function () {
+gulp.task('package', function() {
   var manifest = require('./dist/manifest.json');
   return gulp.src(['dist/**', '!**/*.js.map'])
 
-      // packer doesn't work
-      // .pipe($.if('scripts/options.js', $.streamify($.packer({base62: true, shrink: false}))))
-      // .pipe($.if('scripts/options.min.js', $.rename((path) => {
-      //   path.basename = path.basename.replace(".min", "");
-      //   return path;
-      // })))
-      // .pipe($.closureCompiler({
-      //    // compilerPath: 'bower_components/closure-compiler/compiler.jar',
-      //    fileName: 'build.js',
-      //    compilerFlags: {
-      //      closure_entry_point: 'app.main',
-      //      compilation_level: 'ADVANCED_OPTIMIZATIONS',
-      //      only_closure_dependencies: true,
-      //      warning_level: 'VERBOSE'
-      //    }
-      //  }))
-      .pipe($.zip('AutoCopper-' + manifest.version + '.zip'))
-      .pipe(gulp.dest('package'));
+  // packer doesn't work
+  // .pipe($.if('scripts/options.js', $.streamify($.packer({base62: true, shrink: false}))))
+  // .pipe($.if('scripts/options.min.js', $.rename((path) => {
+  //   path.basename = path.basename.replace(".min", "");
+  //   return path;
+  // })))
+  // .pipe($.closureCompiler({
+  //    // compilerPath: 'bower_components/closure-compiler/compiler.jar',
+  //    fileName: 'build.js',
+  //    compilerFlags: {
+  //      closure_entry_point: 'app.main',
+  //      compilation_level: 'ADVANCED_OPTIMIZATIONS',
+  //      only_closure_dependencies: true,
+  //      warning_level: 'VERBOSE'
+  //    }
+  //  }))
+  .pipe($.zip('AutoCopper-' + manifest.version + '.zip'))
+    .pipe(gulp.dest('package'));
 });
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'babel', 'bower', 'dependencies', 'chromeManifest',
-    ['html', 'images', 'extras'],
+    'lint', 'babel', 'bower', 'dependencies', 'chromeManifest', ['html', 'images', 'extras'],
     'size', cb);
 });
 

@@ -1,7 +1,9 @@
 'use strict';
 
+var libs = ["libs/js/jquery/jquery.min.js", "libs/js/sjcl/sjcl.js"];
+
 chrome.webNavigation.onCompleted.addListener((e) => {
-  injectScripts(e);
+  injectScripts(e.tabId, getScripts(e));
 }, {
   url: [{
     hostSuffix: "supremenewyork.com"
@@ -9,52 +11,60 @@ chrome.webNavigation.onCompleted.addListener((e) => {
 });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener((e) => {
-  injectScripts(e);
+  injectScripts(e.tabId, getScripts(e));
 }, {
   url: [{
     hostSuffix: "supremenewyork.com"
   }]
 });
 
-function injectScripts(e) {
-  console.log("injecting scripts in " + e.url);
-  // load jquery
-  chrome.tabs.executeScript(e.tabId, {
-    file: "libs/js/jquery/jquery.min.js",
-    runAt: "document_end"
-  }, () => {
-    // then load sjcl
-    chrome.tabs.executeScript(e.tabId, {
-      file: "libs/js/sjcl/sjcl.js",
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.startSearch === true) {
+    console.log("received message to start search");
+
+    var scripts = libs.concat(["scripts/search.js"]);
+
+    injectScripts(request.tabId, scripts)
+
+    sendResponse({
+      success: true
+    });
+  }
+});
+
+function injectScripts(tabId, scripts) {
+  console.log("injecting scripts " + scripts.join(","));
+
+  Promise.all(scripts.map(res => new Promise((resolve, reject) => {
+    chrome.tabs.executeScript(tabId, {
+      file: res,
       runAt: "document_end"
     }, () => {
-      // then load header
-      chrome.tabs.executeScript(e.tabId, {
-        file: "scripts/header.js",
-        runAt: "document_end"
-      }, () => {
-        // load the desired scripts
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve();
+      }
+    })
+  })));
+}
 
-        if (e.url.indexOf("/all") != -1 || e.url.indexOf("/new") != -1) {
-          // if at view all page
-          chrome.tabs.executeScript(e.tabId, {
-            file: "scripts/viewall.js",
-            runAt: "document_end"
-          });
-        } else if (e.url.indexOf("shop/") != -1) {
-          // if at item page
-          chrome.tabs.executeScript(e.tabId, {
-            file: "scripts/item.js",
-            runAt: "document_end"
-          });
-        } else if (e.url.indexOf("/checkout") != -1) {
-          chrome.tabs.executeScript(e.tabId, {
-            // if at checkout page
-            file: "scripts/checkout.js",
-            runAt: "document_end"
-          });
-        }
-      });
-    });
-  });
+function getScripts(e) {
+  var scripts = libs.slice();
+
+  if (e.url.indexOf("/all") != -1 || e.url.indexOf("/new") != -1) {
+    // if at view all page
+    scripts.push("scripts/viewall.js")
+  } else if (e.url.indexOf("shop/") != -1) {
+    // if at item page
+    scripts.push("scripts/item.js")
+  } else if (e.url.indexOf("/checkout") != -1) {
+    // if at checkout page
+    scripts.push("scripts/checkout.js")
+  }
+
+  // then load header
+  scripts.push("scripts/header.js");
+
+  return scripts;
 }

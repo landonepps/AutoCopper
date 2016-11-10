@@ -1,5 +1,7 @@
 'use strict';
 
+let newItemsUrl = "http://www.supremenewyork.com/shop/new";
+
 var optionData = ["keyword", "color", "searchEnabled"];
 
 function hyphenate(text) {
@@ -15,7 +17,7 @@ function save_options() {
   newOptions["keyword"] = document.getElementById("keyword").value;
   newOptions["color"] = document.getElementById("color").value;
   newOptions["size"] = document.getElementById("size").value;
-  newOptions["searchEnabled"] = document.getElementById("search-enabled").checked;
+  // newOptions["searchEnabled"] = document.getElementById("search-enabled").checked;
   newOptions["checkoutEnabled"] = document.getElementById("checkout-enabled").checked;
   newOptions["addToCartEnabled"] = document.getElementById("add-to-cart-enabled").checked;
 
@@ -24,17 +26,16 @@ function save_options() {
     searchOptions: newOptions
   }, () => {
     // Update status to let user know options were saved.
-    var status = document.getElementById('status');
-    status.textContent = 'Options saved.';
+    $('#save').addClass('btn-success').text("Saved!");
     setTimeout(() => {
-      status.textContent = '';
+      $('#save').removeClass('btn-success').text("Save Options");
     }, 1000);
   });
 
   chrome.tabs.query({
     url: ["*://*.supremenewyork.com/*", "*://supremenewyork.com/*"]
   }, function(tabs) {
-    tabs.forEach( tab => {
+    tabs.forEach(tab => {
       chrome.tabs.sendMessage(tab.id, {
         updateHeader: true
       });
@@ -49,12 +50,37 @@ function restore_options() {
       document.getElementById("keyword").value = searchOptions["keyword"];
       document.getElementById("color").value = searchOptions["color"];
       document.getElementById("size").value = searchOptions["size"];
-      document.getElementById("search-enabled").checked = searchOptions["searchEnabled"];
+      // document.getElementById("search-enabled").checked = searchOptions["searchEnabled"];
       document.getElementById("checkout-enabled").checked = searchOptions["checkoutEnabled"];
       document.getElementById("add-to-cart-enabled").checked = searchOptions["addToCartEnabled"];
     }
   });
 }
 
+function edit_info() {
+  chrome.runtime.openOptionsPage();
+}
+
+function start_search() {
+  document.getElementById('search').removeEventListener('click', start_search);
+  save_options();
+  chrome.tabs.create({
+    url: newItemsUrl,
+    index: 0,
+    active: false
+  }, tab => {
+    chrome.runtime.sendMessage({
+      startSearch: true,
+      tabId: tab.id
+    }, response => {
+      if (response.success === true) {
+        chrome.tabs.update(tab.id, {active: true});
+      }
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click', save_options);
+document.getElementById('edit-info').addEventListener('click', edit_info);
+document.getElementById('search').addEventListener('click', start_search);
