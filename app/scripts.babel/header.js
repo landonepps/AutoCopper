@@ -31,6 +31,10 @@ function updateMessage() {
       alerts.push(["Auto Add to Cart: ", options.size]);
     }
 
+    if (options.autofillEnabled === true) {
+      alerts.push(["Auto-fill Checkout: ", "Enabled"]);
+    }
+
     if (options.checkoutEnabled === true) {
       alerts.push(["Auto-checkout:", "Enabled"]);
     }

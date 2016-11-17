@@ -193,7 +193,7 @@ gulp.task('package', function() {
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'babel', 'bower', 'dependencies', 'chromeManifest', ['html', 'images', 'extras'],
+    'lint', 'babel', 'bower', 'dependencies', 'chromeManifest', 'styles', ['html', 'images', 'extras'],
     'size', cb);
 });
 

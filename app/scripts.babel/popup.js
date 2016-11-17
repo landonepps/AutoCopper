@@ -10,6 +10,7 @@ function hyphenate(text) {
   })
 }
 
+// TODO: probably should not save the search fields as well (though maybe it doesn't matter)
 // Saves options to chrome.storage.local
 function save_options() {
   var newOptions = {};
@@ -17,7 +18,7 @@ function save_options() {
   newOptions["keyword"] = document.getElementById("keyword").value;
   newOptions["color"] = document.getElementById("color").value;
   newOptions["size"] = document.getElementById("size").value;
-  // newOptions["searchEnabled"] = document.getElementById("search-enabled").checked;
+  newOptions["autofillEnabled"] = document.getElementById("autofill-enabled").checked;
   newOptions["checkoutEnabled"] = document.getElementById("checkout-enabled").checked;
   newOptions["addToCartEnabled"] = document.getElementById("add-to-cart-enabled").checked;
 
@@ -50,7 +51,7 @@ function restore_options() {
       document.getElementById("keyword").value = searchOptions["keyword"];
       document.getElementById("color").value = searchOptions["color"];
       document.getElementById("size").value = searchOptions["size"];
-      // document.getElementById("search-enabled").checked = searchOptions["searchEnabled"];
+      document.getElementById("autofill-enabled").checked = searchOptions["autofillEnabled"];
       document.getElementById("checkout-enabled").checked = searchOptions["checkoutEnabled"];
       document.getElementById("add-to-cart-enabled").checked = searchOptions["addToCartEnabled"];
     }
@@ -61,6 +62,7 @@ function edit_info() {
   chrome.runtime.openOptionsPage();
 }
 
+// TODO: put in a warning if checkout enabled
 function start_search() {
   document.getElementById('search').removeEventListener('click', start_search);
   save_options();
