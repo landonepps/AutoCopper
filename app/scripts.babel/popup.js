@@ -27,9 +27,10 @@ function save_options() {
     searchOptions: newOptions
   }, () => {
     // Update status to let user know options were saved.
+    var oldText = document.getElementById("save").textContent;
     $('#save').addClass('btn-success').text("Saved!");
     setTimeout(() => {
-      $('#save').removeClass('btn-success').text("Save Options");
+      $('#save').removeClass('btn-success').text(oldText);
     }, 1000);
   });
 

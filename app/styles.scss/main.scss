@@ -1,6 +1,6 @@
 body.options {
-  padding: 5px 0 40px 40px;
-  min-width: 600px;
+  padding: 10px;
+  min-width: 800px;
   min-height: auto;
 }
 
@@ -50,13 +50,13 @@ table#autocopper-alert td, tr {
   color: red;
 }
 
-#options-form label {
-  margin-top: 7px;
-}
-
-#options-form input:not(#cvv):not(#card) {
-  width: 90%;
-}
+// #options-form label {
+//   margin-top: 7px;
+// }
+//
+// #options-form input:not(#cvv):not(#card) {
+//   width: 90%;
+// }
 
 // .button-xlarge {
 //   font-size: 125%;

@@ -37,10 +37,10 @@ function save_options() {
   // save to storage
   chrome.storage.local.set({options: newOptions}, () => {
     // Update status to let user know options were saved.
-    var status = document.getElementById('status');
-    status.textContent = 'Options saved.';
+    var oldText = document.getElementById("save").textContent;
+    $('#save').addClass('btn-success').text("Saved!");
     setTimeout(() => {
-      status.textContent = '';
+      $('#save').removeClass('btn-success').text(oldText);
     }, 1000);
   });
 }
