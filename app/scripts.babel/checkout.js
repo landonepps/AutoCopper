@@ -22,14 +22,23 @@ function checkout() {
       userInfo["cvv"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */ , userInfo["cvv"]);
 
       if (userInfo !== undefined) {
-        $("input[id*='last']").val(userInfo.lastName)
-        $("input[id*='first']").val(userInfo.firstName)
+        if ($(document.body).hasClass("japan")) {
+          // TODO I should add a dropdown for state in the options page
+          $("select[id*='state']").val(" " + userInfo.state)
+          $("input[id*='last']").val(userInfo.lastName)
+          $("input[id*='first']").val(userInfo.firstName)
+        } else {
+          $("select[id*='state']").val(userInfo.state)
+          $("input[id*='name']").val(userInfo.firstName + " " + userInfo.lastName)
+          // terms is checked, but in the us store, we need to make it appear so
+          $(".terms .icheckbox_minimal").addClass("checked");
+          // TODO need 2nd address for america (maybe more for europe/CA?)
+          // $("input[id*='oba3']").val(userInfo.address)
+        }
         $("input[id*='email']").val(userInfo.email)
         $("input[id*='tel']").val(userInfo.phone)
-          // TODO The space needs to be removed for other regions
-        $("select[id*='state']").val(" " + userInfo.state)
         $("input[id*='city']").val(userInfo.city)
-        $("input[id*='addr']").val(userInfo.address)
+        $("input[id*='addr'],input[id='bo']").val(userInfo.address)
         $("input[id*='zip']").val(userInfo.zip)
         $("select[id*='type']").val(userInfo.cardType);
         $("input[id*='cnb']").val(userInfo.card);
@@ -38,14 +47,22 @@ function checkout() {
         $("input[id*='vval'],input[id*='verif']").val(userInfo.cvv);
         $("input[id*='terms']").prop('checked', true);
 
-        var event = new UIEvent("change", {
+        var changeEvent = new UIEvent("change", {
+          "view": window,
+          "bubbles": true,
+          "cancelable": true
+        });
+
+        var pasteEvent = new UIEvent("paste", {
           "view": window,
           "bubbles": true,
           "cancelable": true
         });
 
         // trigger change event to update mask (unmask().mask("9999 9999..."))
-        document.getElementById("credit_card_type").dispatchEvent(event);
+        document.getElementById("credit_card_type").dispatchEvent(changeEvent);
+        document.getElementById("order_tel").dispatchEvent(pasteEvent);
+
       } else {
         console.log("checkout info not set");
       }

@@ -55,7 +55,7 @@ gulp.task('images', () => {
     .pipe(gulp.dest('dist/images'));
 });
 
-gulp.task('styles', () => {
+gulp.task('sass', () => {
   return gulp.src('app/styles.scss/*.scss')
     .pipe($.plumber())
     .pipe($.sass.sync({
@@ -90,7 +90,7 @@ gulp.task('chromeManifest', () => {
     .pipe($.chromeManifest({
       // buildnumber: true,
       background: {
-        target: 'scripts/background.js',
+        target: 'scripts/eventPage.js',
         exclude: [
           'scripts/chromereload.js'
         ]
@@ -114,7 +114,24 @@ gulp.task('babel', () => {
     .pipe(gulp.dest('app/scripts'));
 });
 
-gulp.task('bower', function() {
+// TODO: this should be automatic
+gulp.task('scripts', () => {
+  return gulp.src(['app/scripts/search.js',
+       'app/scripts/item.js',
+       'app/scripts/checkout.js',
+       'app/scripts/viewall.js',
+       'app/scripts/header.js'])
+    .pipe($.gnirts())
+    .pipe($.uglify())
+    .pipe(gulp.dest('dist/scripts'));
+});
+
+gulp.task('libs', () => {
+  return gulp.src('app/libs/**/*.*')
+    .pipe(gulp.dest('dist/libs'));
+});
+
+gulp.task('bower', () => {
   return $.bower();
 });
 
@@ -141,7 +158,7 @@ gulp.task('watch', ['bower', 'dependencies', 'lint', 'babel'], () => {
   ]).on('change', $.livereload.reload);
 
   gulp.watch('app/scripts.babel/**/*.js', ['lint', 'babel']);
-  gulp.watch('app/styles.scss/**/*.scss', ['styles']);
+  gulp.watch('app/styles.scss/**/*.scss', ['sass']);
   gulp.watch('bower.json', ['wiredep']);
 });
 
@@ -167,7 +184,7 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('package', function() {
+gulp.task('package', () => {
   var manifest = require('./dist/manifest.json');
   return gulp.src(['dist/**', '!**/*.js.map'])
 
@@ -193,8 +210,8 @@ gulp.task('package', function() {
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'babel', 'bower', 'dependencies', 'chromeManifest', 'styles', ['html', 'images', 'extras'],
-    'size', cb);
+    'lint', 'babel', 'bower', 'dependencies', 'sass', 'scripts', 'libs',
+    'chromeManifest', ['html', 'images', 'extras'], 'size', cb);
 });
 
 gulp.task('default', ['clean'], cb => {
