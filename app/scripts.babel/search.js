@@ -1,68 +1,112 @@
 'use strict';
 
-let shopUrl = "http://www.supremenewyork.com";
+(function() {
+  let shopUrl = "http://www.supremenewyork.com";
+  let newItemsUrl = "http://www.supremenewyork.com/shop/new";
 
-var itemRegex;
-var colorRegex;
+  var itemRegex;
+  var colorRegex;
+  var isNewSearch;
+  var prevLinks;
+  var searchTabId;
 
-if ($(document.body).hasClass("view-all")) {
+  if ($(document.body).hasClass("view-all")) {
 
-  console.log("starting search");
+    console.log("starting search");
 
-  // make sold out tag visible
-  $(".sold_out_tag").toggle();
+    // make sold out tag visible
+    $(".sold_out_tag").toggle();
 
-  chrome.storage.local.get(['searchOptions'], results => {
-    var itemOptions = results.searchOptions;
-    itemRegex = new RegExp(itemOptions.keyword, "i");
-    colorRegex = new RegExp(itemOptions.color, "i");
-    searchLinks();
-  });
-}
+    chrome.storage.local.get(['searchOptions', 'prevLinks', 'isNewSearch', 'searchTabId'], results => {
+      var itemOptions = results.searchOptions;
+      itemRegex = new RegExp(itemOptions.keyword, "i");
+      colorRegex = new RegExp(itemOptions.color, "i");
+      prevLinks = results.prevLinks;
+      isNewSearch = results.isNewSearch;
+      searchTabId = results.searchTabId;
+      searchItems();
+    });
+  }
 
-function searchLinks() {
-  console.log("searchLinks()");
+  function searchItems() {
+    console.log("search()");
 
-  var itemFound = false;
-  var links = [];
-  $('article a[href]').each((i, element) => {
-    links.push($(element).attr('href'));
-  });
+    var links = [];
+    $('article a[href]').each((i, element) => {
+      links.push($(element).attr('href'));
+    });
 
-  // keep track of checked links
-  var checkedLinkCount = 0;
+    var sortedLinks = links.slice(0).sort();
 
-  $(links).each((index, link) => {
-    // get the html
-    $.ajax({
-      url: link,
-      success: (html) => {
-        var name = $(html).find('[itemprop="name"]:first').text();
-        if (itemRegex.test(name)) {
-          var color = $(html).find('[itemprop="model"]:first').text();
-          if (colorRegex.test(color)) {
-            // if name and color match, then we found it!
-            itemFound = true;
-            console.log(name + " " + color)
-            console.log(link);
-            // load the page
-            window.location.href = shopUrl + link;
+    console.log("is new search: " + isNewSearch);
+
+    if (isNewSearch === true) {
+      isNewSearch = false;
+      chrome.storage.local.set({
+        isNewSearch: isNewSearch,
+        prevLinks: sortedLinks
+      }, () => {
+        searchLinks(links);
+      });
+    } else {
+      if (prevLinks != undefined) {
+        if (sortedLinks.length === prevLinks.length &&
+          sortedLinks.every((v, i) => v === prevLinks[i])) {
+          console.log("items haven't dropped yet");
+          reloadPage();
+        } else {
+          console.log("drop detected!");
+          searchLinks(links);
+        }
+      } else {
+        console.log("error, previous items were not recorded")
+      }
+    }
+  }
+
+  function searchLinks(links) {
+
+    var itemFound = false;
+    // keep track of checked links
+    var checkedLinkCount = 0;
+
+    $(links).each((index, link) => {
+      // get the html
+      $.ajax({
+        url: link,
+        success: (html) => {
+          var name = $(html).find('[itemprop="name"]:first').text();
+          if (itemRegex.test(name)) {
+            var color = $(html).find('[itemprop="model"]:first').text();
+            if (colorRegex.test(color)) {
+              // if name and color match, then we found it!
+              itemFound = true;
+              console.log(name + " " + color)
+              console.log(link);
+              // load the page
+              window.location.href = shopUrl + link;
+            }
+          }
+
+          // we checked a link, so increment the count
+          checkedLinkCount++;
+
+          // !! too dangerous to enable this yet !!
+          // if we checked all the links and didn't find it, refresh
+          // TODO: refresh might cause banning
+          if (checkedLinkCount === links.length && itemFound === false) {
+            console.log("item not found");
+            reloadPage();
           }
         }
-
-        // we checked a link, so increment the count
-        checkedLinkCount++;
-
-        // // !! too dangerous to enable this yet !!
-        // // if we checked all the links and didn't find it, refresh
-        // // TODO: refresh might cause banning
-        // if (checkedLinkCount === links.length && itemFound === false) {
-        //   console.log("item not found");
-        //   setTimeout(() => {
-        //     window.location.reload()
-        //   }, 500 + 200 * Math.random());
-        // }
-      }
+      });
     });
-  });
-}
+  }
+
+  function reloadPage() {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000 + 500 * Math.randon()); //500 + 200 * Math.random());
+  }
+
+}());

@@ -24,7 +24,9 @@ function save_options() {
 
   // save to storage
   chrome.storage.local.set({
-    searchOptions: newOptions
+    searchOptions: newOptions,
+    // we want to reset the search if the options changed
+    isNewSearch: true
   }, () => {
     // Update status to let user know options were saved.
     var oldText = document.getElementById("save").textContent;
@@ -67,17 +69,22 @@ function edit_info() {
 function start_search() {
   document.getElementById('search').removeEventListener('click', start_search);
   save_options();
+
   chrome.tabs.create({
     url: newItemsUrl,
     index: 0,
     active: false
   }, tab => {
     chrome.runtime.sendMessage({
-      startSearch: true,
+      search: true,
       tabId: tab.id
     }, response => {
       if (response.success === true) {
-        chrome.tabs.update(tab.id, {active: true});
+        chrome.storage.local.set({
+          searchTabId: tab.id
+        }, () => {
+          chrome.tabs.update(tab.id, {active: true});
+        });
       }
     });
   });
