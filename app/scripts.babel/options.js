@@ -1,6 +1,6 @@
 'use strict';
 
-var optionData = ["lastName", "firstName", "email", "phone",
+var userInfoFields = ["lastName", "firstName", "email", "phone",
                   "state", "city", "address", "zip",
                   "cardType", "card", "expMonth", "expYear", "cvv"];
 
@@ -25,17 +25,17 @@ function hyphenate(text) {
 
 // Saves options to chrome.storage.local
 function save_options() {
-  var newOptions = {};
-  optionData.forEach((item, index) => {
-    newOptions[item] = document.getElementById(hyphenate(item)).value;
+  var newUserInfo = {};
+  userInfoFields.forEach((item, index) => {
+    newUserInfo[item] = document.getElementById(hyphenate(item)).value;
   })
 
   // encrypt card data
-  newOptions["card"] = sjcl.encrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, newOptions["card"], {mode: "gcm"});
-  newOptions["cvv"] = sjcl.encrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, newOptions["cvv"], {mode: "gcm"});
+  newUserInfo["card"] = sjcl.encrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, newUserInfo["card"], {mode: "gcm"});
+  newUserInfo["cvv"] = sjcl.encrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, newUserInfo["cvv"], {mode: "gcm"});
 
   // save to storage
-  chrome.storage.local.set({options: newOptions}, () => {
+  chrome.storage.local.set({userInfo: newUserInfo}, () => {
     // Update status to let user know options were saved.
     var oldText = document.getElementById("save").textContent;
     $('#save').addClass('btn-success').text("Saved!");
@@ -46,14 +46,14 @@ function save_options() {
 }
 
 function restore_options() {
-  chrome.storage.local.get(['options'], results => {
-    var options = results.options;
+  chrome.storage.local.get(['userInfo'], results => {
+    var userInfo = results.userInfo;
 
-    options["card"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, options["card"]);
-    options["cvv"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, options["cvv"]);
+    userInfo["card"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["card"]);
+    userInfo["cvv"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["cvv"]);
 
-    for (var index in options) {
-      document.getElementById(hyphenate(index)).value = options[index];
+    for (var index in userInfo) {
+      document.getElementById(hyphenate(index)).value = userInfo[index];
     }
   });
 }

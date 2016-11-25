@@ -8,14 +8,13 @@
     checkout();
   }
 
-  // TODO: rename options and searchOptions
   function checkout() {
     console.log("filling out form");
 
-    chrome.storage.local.get(['options', 'searchOptions'], results => {
+    chrome.storage.local.get(['userInfo', 'options'], results => {
 
-      var userInfo = results.options;
-      var options = results.searchOptions;
+      var userInfo = results.userInfo;
+      var options = results.options;
 
       if (options.autofillEnabled === true) {
 

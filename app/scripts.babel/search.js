@@ -17,10 +17,10 @@
     // make sold out tag visible
     $(".sold_out_tag").toggle();
 
-    chrome.storage.local.get(['searchOptions', 'prevLinks', 'isNewSearch', 'searchTabId'], results => {
-      var itemOptions = results.searchOptions;
-      itemRegex = new RegExp(itemOptions.keyword, "i");
-      colorRegex = new RegExp(itemOptions.color, "i");
+    chrome.storage.local.get(['options', 'prevLinks', 'isNewSearch', 'searchTabId'], results => {
+      var options = results.options;
+      itemRegex = new RegExp(options.keyword, "i");
+      colorRegex = new RegExp(options.color, "i");
       prevLinks = results.prevLinks;
       isNewSearch = results.isNewSearch;
       searchTabId = results.searchTabId;

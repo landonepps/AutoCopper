@@ -36,22 +36,21 @@
       console.log(itemsOriginallyInCart);
     }
 
-    chrome.storage.local.get(['searchOptions'], results => {
-      console.log(sizeOptions);
-      console.log("getting item options");
-      var itemOptions = results.searchOptions;
-      if (itemOptions !== undefined) {
+    chrome.storage.local.get(['options'], results => {
+      console.log("getting options");
+      var options = results.options;
+      if (options !== undefined) {
 
         // select the desired size
         Array.prototype.forEach.call(sizeOptions, (element, index) => {
-          if (element.textContent === itemOptions.size) {
+          if (element.textContent === options.size) {
             element.selected = true;
             sizeValue = element.value;
           }
         });
 
         // make sure the correct size is selected
-        if (itemOptions.addToCartEnabled &&
+        if (options.addToCartEnabled &&
           $("#size").length != 0 &&
           $("#size").val() === sizeValue) {
 

@@ -14,14 +14,14 @@
   updateMessage();
 
   function updateMessage() {
-    chrome.storage.local.get(['options', 'searchOptions'], results => {
+    chrome.storage.local.get(['userInfo', 'options'], results => {
       var oldAlert = document.getElementById("autocopper-alert");
       if (oldAlert != undefined) {
         document.body.removeChild(oldAlert);
       }
 
-      var userInfo = results.options;
-      var options = results.searchOptions;
+      var userInfo = results.userInfo;
+      var options = results.options;
 
 
       var alerts = [];
@@ -31,15 +31,18 @@
       }
 
       if (options.addToCartEnabled === true) {
-        alerts.push(["Auto Add to Cart: ", options.size]);
+        alerts.push(["Add to Cart: ", options.size]);
       }
 
       if (options.autofillEnabled === true) {
-        alerts.push(["Auto-fill Checkout: ", "Enabled"]);
+        alerts.push(["Fill Checkout Info: ", "Enabled"]);
       }
 
       if (options.checkoutEnabled === true) {
-        alerts.push(["Auto-checkout:", "Enabled"]);
+        header.classList.add("purchase");
+        alerts.push(["Complete Purchase:", "Enabled"]);
+      } else {
+        header.classList.remove("purchase");
       }
 
       if (alerts.length > 0) {

@@ -15,6 +15,12 @@ body.popup {
   line-height: 30px;
   height: 30px;
   font-size: 20px;
+  color: black;
+  background-color: white;
+  font-family: sans-serif;
+}
+
+#autocopper-header.purchase {
   color: white;
   background-color: red;
 }
@@ -24,6 +30,7 @@ table#autocopper-alert {
   float: left;
   text-align: center;
   font-size: 15px;
+  font-family: sans-serif;
 }
 
 table#autocopper-alert td, tr {
