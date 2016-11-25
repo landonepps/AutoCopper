@@ -6,6 +6,6 @@
     console.log("on view all page");
 
     // make sold out tag visible
-    $(".sold_out_tag").toggle();
+    $(".sold_out_tag").show();
   }
 }());

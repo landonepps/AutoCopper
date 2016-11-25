@@ -2,10 +2,12 @@
 
 (function() {
   let shopUrl = "http://www.supremenewyork.com";
-  let newItemsUrl = "http://www.supremenewyork.com/shop/new";
+  // let newItemsUrl = "http://www.supremenewyork.com/shop/new";
 
   var itemRegex;
   var colorRegex;
+  var itemSelector = '[itemprop="name"]:first';
+  var colorSelector = '[itemprop="model"]:first';
   var isNewSearch;
   var prevLinks;
   var searchTabId;
@@ -13,9 +15,6 @@
   if ($(document.body).hasClass("view-all")) {
 
     console.log("starting search");
-
-    // make sold out tag visible
-    $(".sold_out_tag").toggle();
 
     chrome.storage.local.get(['options', 'prevLinks', 'isNewSearch', 'searchTabId'], results => {
       var options = results.options;
@@ -42,7 +41,7 @@
 
     if (isNewSearch === true) {
       chrome.storage.local.set({
-        isNewSearch: false,
+        // isNewSearch: false,
         prevLinks: sortedLinks
       }, () => {
         searchLinks(links);
@@ -70,47 +69,116 @@
 
   function searchLinks(links) {
 
-    var itemFound = false;
-    // keep track of checked links
-    var checkedLinkCount = 0;
+    var linkRegex = /([^\/]+)\/([^\/]+)$/;
 
-    $(links).each((index, link) => {
-      // get the html
-      $.ajax({
-        url: link,
-        success: (html) => {
-          var name = $(html).find('[itemprop="name"]:first').text();
-          if (itemRegex.test(name)) {
-            var color = $(html).find('[itemprop="model"]:first').text();
-            if (colorRegex.test(color)) {
-              // if name and color match, then we found it!
-              itemFound = true;
-              console.log(name + " " + color)
-              console.log(link);
-              // load the page
-              window.location.href = shopUrl + link;
+    // object to group links
+    // { itemId: {colorId: link } }
+    var linksObj = {};
+
+    // construct the 2D array-like object
+    links.forEach(link => {
+      var match = linkRegex.exec(link);
+      var itemId = match[1];
+      var colorId = match[2];
+      if (!(itemId in linksObj)) {
+        // create object if it doesn't exist
+        linksObj[itemId] = {};
+      }
+      // add link to existing object
+      linksObj[itemId][colorId] = link;
+    });
+
+    var itemFound = false;
+    var colorwayFound = false;
+    var itemsChecked = 0;
+
+    console.log(linksObj);
+
+    // TODO this isn't perfect.
+    // I load one page twice to check the item and color separately
+    // I check all the pages even if the item was found first
+    Object.entries(linksObj).forEach(([itemId, colorIdsObj]) => {
+
+      var firstItem = colorIdsObj[Object.keys(colorIdsObj)[0]];
+
+      if (itemFound === false) {
+        checkLink(firstItem, itemRegex, itemSelector, result => {
+          if (result === true) {
+            itemFound = true;
+            var colorsChecked = 0;
+            Object.entries(colorIdsObj).forEach(([colorId, link]) => {
+              if (colorwayFound === false) {
+                checkLink(link, colorRegex, colorSelector, result => {
+                  if (result === true) {
+                    colorwayFound = true;
+                    console.log("item found");
+                    window.location.href = shopUrl + link;
+                  } else {
+                    // this isn't the color we're looking for
+                    colorsChecked++;
+                    if (colorwayFound === false &&
+                      colorsChecked >= Object.keys(colorIdsObj).length) {
+                      console.log("item not found");
+                    }
+                  }
+                });
+              }
+            });
+          } else {
+            // this isn't the item we're looking for
+            itemsChecked++;
+            if (itemFound === false &&
+              itemsChecked >= Object.keys(linksObj).length) {
+              console.log("item not found");
             }
           }
-
-          // we checked a link, so increment the count
-          checkedLinkCount++;
-
-          // !! too dangerous to enable this yet !!
-          // if we checked all the links and didn't find it, refresh
-          // TODO: refresh might cause banning
-          if (checkedLinkCount === links.length && itemFound === false) {
-            console.log("item not found");
-            reloadPage();
-          }
-        }
-      });
+        });
+      }
     });
+  }
+
+  function checkLink(link, regex, selector, callback) {
+    loadLink(link, (err, html) => {
+      // TODO check if I need error handling here (/ if this works)
+      // if (err) {
+      //   console.error(err);
+      //   return
+      // }
+
+      checkHtml(html, regex, selector, callback);
+    });
+  }
+
+  function checkHtml(html, regex, selector, callback) {
+    var name = $(html).find(selector).text();
+    console.log("checked " + name);
+    callback(regex.test(name));
+  }
+
+  function loadLink(link, callback) {
+    // create a new GET request
+    var xhr = new XMLHttpRequest();
+    // TODO I really would like to be able to do this synchronously
+    xhr.open("GET", link);
+    // set the request headers to be the same as the Chrome browser
+    xhr.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+    xhr.setRequestHeader("Pragma", "no-cache");
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+    xhr.setRequestHeader("Upgrade-Insecure-Requests", "1");
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        callback(null, xhr.responseText);
+      } else {
+        callback(new Error("Unable to load link: " + link));
+      }
+    };
+    xhr.send();
   }
 
   function reloadPage() {
     setTimeout(() => {
       window.location.reload();
-    }, 1800 + 200 * Math.random()); //500 + 200 * Math.random());
+    }, 1500 + 500 * Math.random()); //500 + 200 * Math.random());
   }
 
 }());
