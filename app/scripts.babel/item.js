@@ -1,10 +1,18 @@
 'use strict';
 
+//TODO: when I load the item page from a search tab, I should stop the search
+
 (function() {
   let shopUrl = "http://www.supremenewyork.com";
 
   if ($(document.body).hasClass("show")) {
     console.log("on item page");
+
+    // we want to stop the search (if running) when an item is loaded
+    chrome.storage.local.set({
+      isNewSearch: true,
+      searchTabId: -1
+    });
     addItemToCart();
   }
 

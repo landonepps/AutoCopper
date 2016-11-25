@@ -41,9 +41,8 @@
     console.log("is new search: " + isNewSearch);
 
     if (isNewSearch === true) {
-      isNewSearch = false;
       chrome.storage.local.set({
-        isNewSearch: isNewSearch,
+        isNewSearch: false,
         prevLinks: sortedLinks
       }, () => {
         searchLinks(links);
@@ -56,7 +55,12 @@
           reloadPage();
         } else {
           console.log("drop detected!");
-          searchLinks(links);
+          chrome.storage.local.set({
+            isNewSearch: false,
+            prevLinks: sortedLinks
+          }, () => {
+            searchLinks(links);
+          });
         }
       } else {
         console.log("error, previous items were not recorded")
@@ -106,7 +110,7 @@
   function reloadPage() {
     setTimeout(() => {
       window.location.reload();
-    }, 1000 + 500 * Math.randon()); //500 + 200 * Math.random());
+    }, 1800 + 200 * Math.random()); //500 + 200 * Math.random());
   }
 
 }());

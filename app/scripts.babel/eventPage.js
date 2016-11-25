@@ -40,7 +40,7 @@ function injectScripts(tabId, scripts) {
   chrome.storage.local.get(["searchTabId"], results => {
     var searchTabId = results.searchTabId;
 
-    if (searchTabId === tabId) {
+    if (tabId === searchTabId) {
       scripts.push("scripts/search.js");
     }
 
