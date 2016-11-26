@@ -41,7 +41,7 @@
 
     if (isNewSearch === true) {
       chrome.storage.local.set({
-        // isNewSearch: false,
+        isNewSearch: false,
         prevLinks: sortedLinks
       }, () => {
         searchLinks(links);
@@ -119,6 +119,7 @@
                     if (colorwayFound === false &&
                       colorsChecked >= Object.keys(colorIdsObj).length) {
                       console.log("item not found");
+                      reloadPage();
                     }
                   }
                 });
@@ -130,6 +131,7 @@
             if (itemFound === false &&
               itemsChecked >= Object.keys(linksObj).length) {
               console.log("item not found");
+              reloadPage();
             }
           }
         });
