@@ -3,8 +3,16 @@
     "message": "AutoCopper",
     "description": "The name of the application"
   },
+  "appShortName": {
+    "message": "AutoCopper",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
   "appDescription": {
-    "message": "AutoCopper is a checkout bot for Supreme",
+    "message": "A Supreme bot.",
     "description": "The description of the application"
+  },
+  "browserActionTitle": {
+    "message": "AutoCopper",
+    "description": "The title of the browser action button"
   }
 }

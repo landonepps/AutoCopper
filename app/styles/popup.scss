@@ -1,0 +1,103 @@
+body.options {
+  padding: 10px;
+  min-width: 800px;
+  min-height: auto;
+}
+
+body.popup {
+  margin: 0px;
+  min-width: 350px;
+}
+
+//
+// Styling for the header when the bot is running
+//
+
+#autocopper-header {
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+  height: 30px;
+  font-size: 20px;
+  color: black;
+  background-color: white;
+  font-family: sans-serif;
+}
+
+#autocopper-header.purchase {
+  color: white;
+  background-color: red;
+}
+
+table#autocopper-alert {
+  border: 0px;
+  float: left;
+  text-align: center;
+  font-size: 15px;
+  font-family: sans-serif;
+}
+
+table#autocopper-alert td, tr {
+  border-width: 0px;
+  border-collapse: collapse;
+  padding: 2px;
+}
+
+
+
+.alert-left {
+  text-align: right;
+  width: 50%;
+}
+
+.alert-right {
+  text-align: left;
+  font-weight: bold;
+  width: 50%;
+  color: red;
+}
+
+// #options-form label {
+//   margin-top: 7px;
+// }
+//
+// #options-form input:not(#cvv):not(#card) {
+//   width: 90%;
+// }
+
+// .button-xlarge {
+//   font-size: 125%;
+// }
+//
+// .button-success, .button-error, .button-warning, .button-secondary {
+//   color: white;
+//   border-radius: 4px;
+//   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+// }
+//
+// .button-success {
+//   background: rgb(28, 184, 65);
+//   /* this is a green */
+// }
+//
+// .button-secondary {
+//   background: rgb(66, 184, 221);
+//   /* this is a light blue */
+// }
+//
+// #popup-button-container {
+//   text-align: center;
+// }
+
+main {
+  margin: 20px;
+}
+
+// input[type="checkbox"] {
+//   transform: scale(1.25);
+// }
+
+// div#status {
+//   margin-left: 15px;
+//   display: inline-block;
+// }

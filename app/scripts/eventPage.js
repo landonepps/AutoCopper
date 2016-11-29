@@ -1,6 +1,8 @@
+import 'chromereload/devonly';
+
 'use strict';
 
-var libs = ["libs/js/jquery/jquery.min.js", "libs/js/sjcl/sjcl.js"];
+var libs = ["scripts/jquery.min.js", "scripts/sjcl.js"];
 
 chrome.webNavigation.onCompleted.addListener((e) => {
   injectScripts(e.tabId, getScripts(e));

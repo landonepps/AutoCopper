@@ -1,24 +1,38 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.15",
-  "version_name": "0.0.15 (Improved Search)",
-  "manifest_version": 2,
+  "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
+  "version": "0.0.16",
+  "version_name": "0.0.16",
+  "manifest_version": 2,
+  "default_locale": "en",
   "icons": {
     "128": "images/icon-128.png"
   },
-  "default_locale": "en",
   "background": {
     "scripts": [
-      "scripts/chromereload.js",
       "scripts/eventPage.js"
     ],
     "persistent": false
   },
+  "browser_action": {
+    "default_icon": {
+      "38": "images/icon-38.png"
+    },
+    "default_title": "__MSG_browserActionTitle__",
+    "default_popup": "pages/popup.html"
+  },
+  "options_page": "pages/options.html",
+  "options_ui": {
+    "page": "pages/options.html",
+    "chrome_style": false
+  },
   "content_scripts": [
     {
       "matches": ["http://*.supremenewyork.com/*", "https://*.supremenewyork.com/*"],
-      "css": ["styles/main.css"]
+      "css": ["styles/contentscript.css"],
+      "run_at": "document_end",
+      "all_frames": false
     }
   ],
   "permissions": [
@@ -27,16 +41,5 @@
     "https://*.supremenewyork.com/*",
     "storage",
     "webNavigation"
-  ],
-  "options_ui": {
-    "page": "options.html",
-    "chrome_style": false
-  },
-  "browser_action": {
-    "default_icon": {
-      "38": "images/icon-38.png"
-    },
-    "default_title": "__MSG_appName__",
-    "default_popup": "popup.html"
-  }
+  ]
 }
