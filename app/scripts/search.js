@@ -44,7 +44,7 @@
         isNewSearch: false,
         prevLinks: sortedLinks
       }, () => {
-        searchLinks(links);
+        startSearch(links);
       });
     } else {
       if (prevLinks != undefined) {
@@ -58,7 +58,7 @@
             isNewSearch: false,
             prevLinks: sortedLinks
           }, () => {
-            searchLinks(links);
+            startSearch(links);
           });
         }
       } else {
@@ -67,7 +67,7 @@
     }
   }
 
-  function searchLinks(links) {
+  function startSearch(links) {
 
     var linkRegex = /([^\/]+)\/([^\/]+)$/;
 
@@ -97,6 +97,8 @@
     // TODO this isn't perfect.
     // I load one page twice to check the item and color separately
     // I check all the pages even if the item was found first
+    // IDEA maybe I can cache the picture link? If the picture is the same, I don't have to reload the page
+    // IDEA maybe I can cache the HTML and check the cache first before loading the page
     Object.entries(linksObj).forEach(([itemId, colorIdsObj]) => {
 
       var firstItem = colorIdsObj[Object.keys(colorIdsObj)[0]];
@@ -141,7 +143,7 @@
 
   function checkLink(link, regex, selector, callback) {
     loadLink(link, (err, html) => {
-      // TODO check if I need error handling here (/ if this works)
+      // TODO check if I need error handling here (/ if this code works)
       // if (err) {
       //   console.error(err);
       //   return
@@ -158,6 +160,20 @@
   }
 
   function loadLink(link, callback) {
+
+    // delay loading the link, if already loading another link
+    if (loadLink.loadingLink === true) {
+      setTimeout(() => {
+        // console.log("link loading... we gotta wait.")
+        loadLink(link, callback);
+      }, 500);
+      return;
+    }
+
+    // we're loading a link
+    loadLink.loadingLink = true;
+    // console.log("loading ", link);
+
     // create a new GET request
     var xhr = new XMLHttpRequest();
     // TODO I really would like to be able to do this synchronously
@@ -168,6 +184,8 @@
     xhr.setRequestHeader("Cache-Control", "no-cache");
     xhr.setRequestHeader("Upgrade-Insecure-Requests", "1");
     xhr.onload = () => {
+      // we're done loading the link
+      loadLink.loadingLink = false;
       if (xhr.status === 200) {
         callback(null, xhr.responseText);
       } else {

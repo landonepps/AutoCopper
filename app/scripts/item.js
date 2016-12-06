@@ -13,6 +13,7 @@
       isNewSearch: true,
       searchTabId: -1
     });
+    // TODO: consider wiping cookies to ensure cart is empty
     addItemToCart();
   }
 
@@ -73,6 +74,7 @@
             }
           }, 50);
         } else {
+          // TODO keep in mind we also get here if add to cart is disabled
           console.log("size not found");
         }
       }
