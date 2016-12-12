@@ -1,6 +1,6 @@
 'use strict';
 
-let newItemsUrl = "http://www.supremenewyork.com/shop/new";
+let searchUrl = "http://www.supremenewyork.com/mobile";
 
 var userInfoFields = ["keyword", "color", "searchEnabled"];
 
@@ -83,23 +83,18 @@ function start_search() {
   document.getElementById('search').removeEventListener('click', start_search);
 
   // make sure to save the options first
-  save_options( () => {
+  save_options(() => {
     chrome.tabs.create({
-      url: newItemsUrl,
+      url: searchUrl,
       index: 0,
       active: false
     }, tab => {
-      chrome.runtime.sendMessage({
-        search: true,
-        tabId: tab.id
-      }, response => {
-        if (response.success === true) {
-          chrome.storage.local.set({
-            searchTabId: tab.id
-          }, () => {
-            chrome.tabs.update(tab.id, {active: true});
-          });
-        }
+      chrome.storage.local.set({
+        searchTabId: tab.id
+      }, () => {
+        chrome.tabs.update(tab.id, {
+          active: true
+        });
       });
     });
   });

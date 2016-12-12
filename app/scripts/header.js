@@ -7,7 +7,7 @@
   }
 
   var header = document.createElement('div');
-  header.innerHTML = "AutoCopper Activated";
+  header.innerHTML = '<div id="autocopper-title">AutoCopper Enabled</div>';
   header.id = "autocopper-header";
   document.body.insertBefore(header, document.body.firstChild);
 
@@ -17,7 +17,7 @@
     chrome.storage.local.get(['userInfo', 'options'], results => {
       var oldAlert = document.getElementById("autocopper-alert");
       if (oldAlert != undefined) {
-        document.body.removeChild(oldAlert);
+        header.removeChild(oldAlert);
       }
 
       var userInfo = results.userInfo;
@@ -46,7 +46,7 @@
       }
 
       if (alerts.length > 0) {
-        var tableLocation = document.body.firstChild.nextSibling;
+        var tableLocation = header.firstChild.nextSibling;
         var alertTable = document.createElement('table');
         alertTable.id = "autocopper-alert";
 
@@ -65,7 +65,7 @@
         });
 
         // insert table
-        document.body.insertBefore(alertTable, tableLocation);
+        header.insertBefore(alertTable, tableLocation);
       }
     });
   }

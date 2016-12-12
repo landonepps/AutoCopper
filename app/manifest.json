@@ -10,9 +10,9 @@
   },
   "background": {
     "scripts": [
-      "scripts/eventPage.js"
+      "scripts/background.js"
     ],
-    "persistent": false
+    "persistent": true
   },
   "browser_action": {
     "default_icon": {
@@ -39,6 +39,8 @@
     "http://*.supremenewyork.com/*",
     "https://*.supremenewyork.com/*",
     "storage",
-    "webNavigation"
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking"
   ]
 }

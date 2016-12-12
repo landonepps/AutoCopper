@@ -38,6 +38,7 @@ for (var i = startYear; i <= endYear; i++){
 }
 
 var stateSelect = document.getElementById('state');
+// TODO this needs to be set
 var region = "japan";
 
 regionInfo[region].states.forEach(state => {
