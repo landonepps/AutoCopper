@@ -1,7 +1,23 @@
 'use strict';
 
+jQuery.extend (
+    jQuery.expr[':'].containsCI = function (a, i, m) {
+        //-- faster than jQuery(a).text()
+        var sText   = (a.textContent || a.innerText || "");
+        var zRegExp = new RegExp (m[3], 'i');
+        return zRegExp.test (sText);
+    }
+);
+
 (function() {
   let shopUrl = "http://www.supremenewyork.com";
+
+  function fillInfo(selector, data) {
+    return {
+      selector: selector,
+      data: data
+    }
+  }
 
   if ($(document.body).hasClass("checkout_page")) {
     console.log("on checkout page");
@@ -16,36 +32,59 @@
       var userInfo = results.userInfo;
       var options = results.options;
 
+      // decrypt the card number and cvv
+      userInfo["card"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */ , userInfo["card"]);
+      userInfo["cvv"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */ , userInfo["cvv"]);
+
+      var fills = {
+        "jp": [
+          fillInfo("label:containsCI('名') ~ input", userInfo.lastName),
+          fillInfo("label:containsCI('名') ~ input ~ input", userInfo.firstName),
+          fillInfo("label:containsCI('メール') ~ input", userInfo.email),
+          fillInfo("label:containsCI('電話') ~ input", userInfo.phone),
+          fillInfo("label:containsCI('県') ~ select", " " + userInfo.state),
+          fillInfo("label:containsCI('市') ~ input", userInfo.city),
+          fillInfo("label:containsCI('住') ~ input", userInfo.address),
+          fillInfo("label:containsCI('郵便') ~ input", userInfo.zip),
+          fillInfo("label:containsCI('方法') ~ select", userInfo.cardType),
+          fillInfo("div:containsCI('カード') ~ input", userInfo.card),
+          fillInfo("label:containsCI('有') ~ select", userInfo.expMonth),
+          fillInfo("label:containsCI('有') ~ select ~ select", userInfo.expYear),
+          fillInfo(":containsCI('cvv') ~ input", userInfo.cvv)
+        ],
+        "am": [
+          fillInfo("label:containsCI('name') ~ input", userInfo.firstName + " " + userInfo.lastName),
+          fillInfo("label:containsCI('email') ~ input", userInfo.email),
+          fillInfo("label:containsCI('tel') ~ input", userInfo.phone),
+          fillInfo("label:containsCI('state') ~ select", userInfo.state),
+          fillInfo("label:containsCI('city') ~ input", userInfo.city),
+          fillInfo("label:containsCI('addr') ~ input", userInfo.address),
+          fillInfo("label:containsCI('zip') ~ input", userInfo.zip),
+          fillInfo("label:containsCI('typ') ~ select", userInfo.cardType),
+          fillInfo("div:containsCI('num') ~ input", userInfo.card),
+          fillInfo("label:containsCI('exp') ~ select", userInfo.expMonth),
+          fillInfo("label:containsCI('exp') ~ select ~ select", userInfo.expYear),
+          fillInfo(":containsCI('cvv') ~ input", userInfo.cvv)
+        ]
+      }
+
       if (options.autofillEnabled === true) {
-
-        userInfo["card"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */ , userInfo["card"]);
-        userInfo["cvv"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */ , userInfo["cvv"]);
-
         if (userInfo !== undefined) {
-          if ($(document.body).hasClass("japan")) {
-            // TODO I should add a dropdown for state in the options page
-            $("select[id*='state']").val(" " + userInfo.state)
-            $("input[id*='last']").val(userInfo.lastName)
-            $("input[id*='first']").val(userInfo.firstName)
-          } else {
-            $("select[id*='state']").val(userInfo.state)
-            $("input[id*='name']").val(userInfo.firstName + " " + userInfo.lastName)
-              // terms is checked, but in the us store, we need to make it appear so
-            $(".terms .icheckbox_minimal").addClass("checked");
-            // TODO need 2nd address for america (maybe more for europe/CA?)
-            // $("input[id*='oba3']").val(userInfo.address)
-          }
-          $("input[id*='email']").val(userInfo.email)
-          $("input[id*='tel']").val(userInfo.phone)
-          $("input[id*='city']").val(userInfo.city)
-          $("input[id*='addr'],input[id='bo']").val(userInfo.address)
-          $("input[id*='zip']").val(userInfo.zip)
-          $("select[id*='type']").val(userInfo.cardType);
-          $("input[id*='cnb']").val(userInfo.card);
-          $("select[id*='month']").val(userInfo.expMonth);
-          $("select[id*='year']").val(userInfo.expYear);
-          $("input[id*='vval'],input[id*='verif']").val(userInfo.cvv);
+          // check the terms
+          $(".terms .icheckbox_minimal").addClass("checked");
           $("input[id*='terms']").prop('checked', true);
+
+          if ($(document.body).hasClass("japan")) {
+            for (var i = 0; i < fills.jp.length; i++) {
+              $(fills.jp[i].selector).val(fills.jp[i].data);
+            }
+          } else {
+            // TODO need 2nd address for america (maybe more for europe/CA?)
+            for (var i = 0; i < fills.am.length; i++) {
+              $(fills.am[i].selector).val(fills.am[i].data);
+            }
+          }
+
 
           var changeEvent = new UIEvent("change", {
             "view": window,

@@ -5,22 +5,20 @@ var userInfoFields = ["lastName", "firstName", "email", "phone",
                   "cardType", "card", "expMonth", "expYear", "cvv"];
 
 var regionInfo = {
-  "japan": {
+  "jp": {
     "states": ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
     "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県",
     "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県",
     "三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県", "鳥取県",
     "島根県", "岡山県", "広島県", "山口県", "徳島県", "香川県", "愛媛県", "高知県",
-    "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"],
-    "fields": []
+    "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"]
   },
-  "americas": {
+  "am": {
     "states": ["AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FM",
     "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME",
     "MH", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
     "NM", "NY", "NC", "ND", "MP", "OH", "OK", "OR", "PW", "PA", "PR", "RI",
-    "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY"],
-    "fields": []
+    "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY"]
   }
 }
 
@@ -39,7 +37,7 @@ for (var i = startYear; i <= endYear; i++){
 
 var stateSelect = document.getElementById('state');
 // TODO this needs to be set
-var region = "japan";
+var region = "jp";
 
 regionInfo[region].states.forEach(state => {
     var opt = document.createElement('option');

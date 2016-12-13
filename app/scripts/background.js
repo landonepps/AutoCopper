@@ -32,7 +32,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
       return { requestHeaders: details.requestHeaders };
     }
   },
-  {urls: ["*://*.supremenewyork.com/*"]},
+  {urls: ["*://*.supremenewyork.com/mobile*"]},
   ["blocking", "requestHeaders"]
 );
 
