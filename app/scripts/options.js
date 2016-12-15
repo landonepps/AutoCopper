@@ -37,7 +37,7 @@ for (var i = startYear; i <= endYear; i++){
 
 var stateSelect = document.getElementById('state');
 // TODO this needs to be set
-var region = "jp";
+var region = "am";
 
 regionInfo[region].states.forEach(state => {
     var opt = document.createElement('option');

@@ -10,7 +10,6 @@
 
     // we want to stop the search (if running) when an item is loaded
     chrome.storage.local.set({
-      isNewSearch: true,
       searchTabId: -1
     });
     // TODO: consider wiping cookies to ensure cart is empty

@@ -1,6 +1,6 @@
 'use strict';
 
-let searchUrl = "http://www.supremenewyork.com/mobile";
+let searchUrl = "http://www.supremenewyork.com/shop";
 
 var userInfoFields = ["keyword", "color", "searchEnabled"];
 
@@ -29,8 +29,6 @@ function save_options(callback) {
   // save to storage
   chrome.storage.local.set({
     options: newOptions,
-    // we want to reset the search if the options changed
-    isNewSearch: true
   }, () => {
     // Update status to let user know options were saved.
     var oldText = document.getElementById("save").textContent;

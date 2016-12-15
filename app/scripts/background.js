@@ -68,10 +68,9 @@ function getScripts(e) {
   if (e.url.indexOf("/all") != -1 || e.url.indexOf("/new") != -1) {
     // if at view all page
     scripts.push("scripts/viewall.js");
-  // TODO: we might not need the item page anymore
-  // } else if (e.url.indexOf("shop/") != -1) {
-  //   // if at item page
-  //   scripts.push("scripts/item.js");
+  } else if (e.url.indexOf("shop/") != -1) {
+    // if at item page
+    scripts.push("scripts/item.js");
   } else if (e.url.indexOf("/checkout") != -1) {
     // if at checkout page
     scripts.push("scripts/checkout.js");
