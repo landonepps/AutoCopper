@@ -19,6 +19,9 @@ var regionInfo = {
     "MH", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
     "NM", "NY", "NC", "ND", "MP", "OH", "OK", "OR", "PW", "PA", "PR", "RI",
     "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY"]
+  },
+  "eu": {
+    "states": []
   }
 }
 
@@ -35,25 +38,40 @@ for (var i = startYear; i <= endYear; i++){
     expYearSelect.appendChild(opt);
 }
 
-var stateSelect = document.getElementById('state');
-// TODO this needs to be set
-var region = "am";
-
-regionInfo[region].states.forEach(state => {
-    var opt = document.createElement('option');
-    opt.value = state;
-    opt.innerHTML = state;
-    stateSelect.appendChild(opt);
-});
-
 function hyphenate(text) {
   return text.replace(/([a-z][A-Z])/g, g => {
     return g[0] + '-' + g[1].toLowerCase();
   })
 }
 
+function setRegion(region) {
+  var stateSelect = document.getElementById('state');
+  $('#state').empty();
+  console.log(region);
+  regionInfo[region].states.forEach(state => {
+      var opt = document.createElement('option');
+      opt.value = state;
+      opt.innerHTML = state;
+      stateSelect.appendChild(opt);
+  });
+  $('a.nav-link').removeClass('active');
+  $(`a.nav-link[href="#${region}"]`).addClass('active');
+}
+
+function change_region(event) {
+  var region = event.target.getAttribute("href").substring(1);
+  // save to storage
+  chrome.storage.local.set({region: region}, () => {
+    // set UI to reflect change
+    setRegion(region);
+  });
+}
+
 // Saves options to chrome.storage.local
 function save_options() {
+  // save can't be clicked again while saving
+  document.getElementById('save').removeEventListener('click', save_options);
+
   var newUserInfo = {};
   userInfoFields.forEach((item, index) => {
     newUserInfo[item] = document.getElementById(hyphenate(item)).value;
@@ -71,14 +89,21 @@ function save_options() {
     $('#save').addClass('btn-success').text("Saved!");
     setTimeout(() => {
       $('#save').removeClass('btn-success').text(oldText);
+      // allow clicking save again
+      document.getElementById('save').addEventListener('click', save_options);
     }, 1000);
   });
 }
 
 function restore_options() {
-  chrome.storage.local.get(['userInfo'], results => {
+  chrome.storage.local.get(['userInfo', 'region'], results => {
     var userInfo = results.userInfo;
-    if (userInfo === undefined) return;
+    var region = results.region;
+
+    if (!userInfo) return;
+    if (!region) region = "jp";
+
+    setRegion(region);
 
     userInfo["card"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["card"]);
     userInfo["cvv"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["cvv"]);
@@ -91,3 +116,4 @@ function restore_options() {
 
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click', save_options);
+$('a.nav-link').click(change_region);

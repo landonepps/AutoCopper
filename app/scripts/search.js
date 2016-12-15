@@ -185,11 +185,11 @@
           chrome.storage.local.set({
             searchTabId: -1
           }, () => {
-            // for normal checkout
+            // load normal checkout page
             setTimeout(() => {
               window.location.href = shopUrl + "/checkout"
             }, DELAY);
-            // for mobile checkout (wait until checkout button appears)
+            // for mobile checkout (need to wait until checkout button appears)
             // setTimeout(() => {window.location.href = mobileUrl + "#checkout"}, DELAY);
           });
         },
