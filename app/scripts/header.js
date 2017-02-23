@@ -7,7 +7,7 @@
   }
 
   var header = document.createElement('div');
-  header.innerHTML = '<div id="autocopper-title">AutoCopper Enabled</div>';
+  header.innerHTML = '<div id="autocopper-title">AutoCopper</div>';
   header.id = "autocopper-header";
   document.body.insertBefore(header, document.body.firstChild);
 
@@ -22,7 +22,6 @@
 
       var userInfo = results.userInfo;
       var options = results.options;
-
 
       var alerts = [];
 
@@ -71,9 +70,13 @@
   }
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.updateHeader === true) {
+    if (request.updateHeader) {
       console.log("got update message")
       updateMessage();
+    }
+
+    if (request.search) {
+
     }
   });
 }());

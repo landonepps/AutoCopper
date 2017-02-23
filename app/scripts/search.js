@@ -3,9 +3,9 @@
 (function() {
   var shopUrl = 'http://www.supremenewyork.com';
   var mobileUrl = 'http://www.supremenewyork.com/mobile';
-  var stockUrl = 'http://www.supremenewyork.com/mobile_stock.json?c=1';
+  var stockUrl = 'http://www.supremenewyork.com/mobile_stock.json';
 
-  let DELAY = 0;
+  let DELAY = 150;
   let INTERVAL = 5000;
 
   var itemRegex;
@@ -32,6 +32,8 @@
       url: stockUrl,
       ifModified: true,
       success: (data, textStatus, xhr) => {
+        console.log(data);
+
         // first check if the file has changed
         if (xhr.status === 304) {
           tryAgain("Store not updated.");
@@ -40,26 +42,33 @@
 
         // make sure JSON object is formatted correctly.
         if (!data || !data.products_and_categories) {
-          console.log("Error: unexpected data format.");
+          console.log("Error: json object doesn't contain 'products_and_categories'");
           return;
         }
 
-        // TODO: Allow searching for items that aren't new
-        var newItems = data.products_and_categories.new;
+        var allItems = [];
+        Object.keys(data.products_and_categories).forEach((key, index) => {
+          var category = data.products_and_categories[key];
+          if (Array.isArray(category)) {
+            allItems = allItems.concat(category);
+          }
+        });
+
         var isFound = false;
 
         // check that the new items category exists
-        if (newItems === undefined) {
-          console.log("Error: JSON object doesn't contain 'new' category");
+        if (allItems.length === 0) {
+          console.log("Error: no items found");
           return;
         }
 
         // find the desired item
-        for (var i = 0; i < newItems.length; i++) {
-          if (itemRegex.test(newItems[i].name)) {
+        for (var i = 0; i < allItems.length; i++) {
+          if (itemRegex.test(allItems[i].name)) {
             isFound = true;
-            console.log(`Found product: ${newItems[i].name}`);
-            findItem(newItems[i]);
+            console.log(`Found product: ${allItems[i].name}`);
+            console.log(allItems[i]);
+            findItem(allItems[i]);
             break;
           }
         }
@@ -78,35 +87,38 @@
     function run() {
       $.getJSON(`/shop/${product.id}.json`, (data) => {
 
-        var colors = data.styles;
+        console.log(data);
+
+        var styles = data.styles;
         var isFound = false;
 
-        if (colors === undefined) {
+        if (styles === undefined) {
           console.log(`Error: ${product.id}.json doesn't contain array 'styles'`);
           return;
         }
 
-        for (var i = 0; i < colors.length; i++) {
-          if (colorRegex.test(colors[i].name)) {
-            console.log(`Found color: ${colors[i].name}`);
+        for (var i = 0; i < styles.length; i++) {
+          if (colorRegex.test(styles[i].name)) {
+            console.log(`Found color: ${styles[i].name}`);
 
-            if (colors[i].sizes === undefined) {
-              console.log(`Error: ${colors[i]} doesn't contain 'sizes'`);
+            if (styles[i].sizes === undefined) {
+              console.log(`Error: ${styles[i]} doesn't contain 'sizes'`);
               break;
             }
 
-            if (colors[i].sizes.length === 1) {
-              console.log(`Only one size: (${colors[i].sizes[0].name}); adding to cart`)
+            if (styles[i].sizes.length === 1) {
+              console.log(`Only one size: (${styles[i].sizes[0].name}); adding to cart`)
               isFound = true;
-              addItemToCart(data, colors[i], colors[i].sizes[0]);
+              addItemToCart(product.id, styles[i].id, styles[i].sizes[0].id);
               break;
             }
 
-            for (var j = 0; j < colors[i].sizes.length; j++) {
-              if (desiredSize === colors[i].sizes[j].name) {
-                console.log(`Found size: ${colors[i].sizes[j].name}`);
+            for (var j = 0; j < styles[i].sizes.length; j++) {
+              var size = styles[i].sizes[j];
+              if (desiredSize === size.name) {
+                console.log(`Found size: ${size.name}`);
                 isFound = true;
-                addItemToCart(data, colors[i], colors[i].sizes[j]);
+                addItemToCart(product.id, styles[i].id, size.id);
                 break;
               }
             }
@@ -116,8 +128,8 @@
     }
   }
 
-  function addItemToCart(productInfo, colorInfo, sizeInfo) {
-    var url = "/shop/" + productInfo.id + "/add.json";
+  function addItemToCart(productId, styleId, sizeId) {
+    var url = "/shop/" + productId + "/add.json";
 
     setTimeout(run, DELAY);
 
@@ -126,14 +138,17 @@
         type: "POST",
         url: url,
         data: {
-          size: sizeInfo.id,
+          size: sizeId,
+          style: styleId,
           qty: 1
         },
         dataType: "json",
         success: function(data) {
           var item;
           for (var i = 0; i < data.length; i++) {
-            if (data[i].size_id === sizeInfo.id) {
+            console.log(typeof data[i].size_id);
+            console.log(typeof sizeId);
+            if (data[i].size_id === sizeId.toString()) {
               item = data[i];
               break;
             }

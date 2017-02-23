@@ -100,7 +100,7 @@ jQuery.extend (
 
           // trigger change event to update mask (unmask().mask("9999 9999..."))
           document.getElementById("credit_card_type").dispatchEvent(changeEvent);
-          document.getElementById("order_tel").dispatchEvent(pasteEvent);
+          document.getElementById("order_tl").dispatchEvent(pasteEvent);
 
         } else {
           console.log("checkout info not set");

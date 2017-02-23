@@ -1,6 +1,6 @@
 'use strict';
 
-let searchUrl = "http://www.supremenewyork.com/shop";
+let searchUrl = "http://www.supremenewyork.com/shop/all";
 
 var userInfoFields = ["keyword", "color", "searchEnabled"];
 
@@ -8,6 +8,18 @@ function hyphenate(text) {
   return text.replace(/([a-z][A-Z])/g, g => {
     return g[0] + '-' + g[1].toLowerCase()
   })
+}
+
+function sendMessage(msg, callback) {
+  chrome.tabs.query({
+    url: ["*://*.supremenewyork.com/*", "*://supremenewyork.com/*"]
+  }, function(tabs) {
+    tabs.forEach(tab => {
+      chrome.tabs.sendMessage(tab.id, msg);
+    });
+    // we're finished saving, so it's callback time
+    if (callback) callback();
+  });
 }
 
 // TODO: probably should not save the search fields as well (though maybe it doesn't matter)
@@ -40,18 +52,7 @@ function save_options(callback) {
     }, 1000);
   });
 
-  chrome.tabs.query({
-    url: ["*://*.supremenewyork.com/*", "*://supremenewyork.com/*"]
-  }, function(tabs) {
-    tabs.forEach(tab => {
-      chrome.tabs.sendMessage(tab.id, {
-        updateHeader: true
-      });
-    });
-
-    // we're finished saving, so it's callback time
-    callback();
-  });
+  sendMessage({ updateHeader: true }, callback);
 }
 
 function restore_options() {
