@@ -5,7 +5,16 @@
 
     console.log("on view all page");
 
-    // make sold out tag visible
-    $(".sold_out_tag").show();
+    var timesToRepeat = 10;
+    var keepChanging = () => {
+      // make sold out tag visible
+      $(".sold_out_tag").show();
+
+      timesToRepeat = timesToRepeat - 1;
+      if (timesToRepeat > 0) setTimeout(keepChanging, 1000);
+    }
+    setTimeout(keepChanging, 1000)
+
+
   }
 }());

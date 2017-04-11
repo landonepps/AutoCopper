@@ -32,8 +32,6 @@
       url: stockUrl,
       ifModified: true,
       success: (data, textStatus, xhr) => {
-        console.log(data);
-
         // first check if the file has changed
         if (xhr.status === 304) {
           tryAgain("Store not updated.");

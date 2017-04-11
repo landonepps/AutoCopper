@@ -1,24 +1,36 @@
 'use strict';
 
-(function() {
-  var oldHeader = document.getElementById("autocopper-header");
-  if (oldHeader != undefined) {
-    document.body.removeChild(oldHeader);
+(function () {
+
+  var header;
+
+  addHeader();
+
+  function addHeader() {
+    var oldHeader = document.getElementById("autocopper-header");
+    if (oldHeader) return;
+
+    header = document.createElement('div');
+    header.innerHTML = '<div id="autocopper-title">AutoCopper</div>';
+    header.id = "autocopper-header";
+    document.body.insertBefore(header, document.body.firstChild);
+
+    updateMessage();
+
+    var times = 5;
+    var keepHeader = () => {
+      times = times - 1;
+      var oldHeader = document.getElementById("autocopper-header");
+      if (!oldHeader) addHeader();
+      console.log("header checked");
+      if (times > 0) setTimeout(keepHeader, 1000);
+    }
+    setTimeout(keepHeader, 1000)
   }
 
-  var header = document.createElement('div');
-  header.innerHTML = '<div id="autocopper-title">AutoCopper</div>';
-  header.id = "autocopper-header";
-  document.body.insertBefore(header, document.body.firstChild);
-
-  updateMessage();
-
   function updateMessage() {
+    console.log("setting update message");
     chrome.storage.local.get(['userInfo', 'options'], results => {
-      var oldAlert = document.getElementById("autocopper-alert");
-      if (oldAlert != undefined) {
-        header.removeChild(oldAlert);
-      }
 
       var userInfo = results.userInfo;
       var options = results.options;
@@ -72,11 +84,7 @@
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.updateHeader) {
       console.log("got update message")
-      updateMessage();
-    }
-
-    if (request.search) {
-
+      addHeader();
     }
   });
 }());

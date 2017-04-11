@@ -2,19 +2,26 @@
 
 //TODO: when I load the item page from a search tab, I should stop the search
 
-(function() {
+(function () {
   let shopUrl = "http://www.supremenewyork.com";
 
-  if ($(document.body).hasClass("show")) {
-    console.log("on item page");
+  var init = () => {
+    if ($(document.body).hasClass("show")) {
+      console.log("on item page");
 
-    // we want to stop the search (if running) when an item is loaded
-    chrome.storage.local.set({
-      searchTabId: -1
-    });
-    // TODO: consider wiping cookies to ensure cart is empty
-    addItemToCart();
+      // we want to stop the search (if running) when an item is loaded
+      chrome.storage.local.set({
+        searchTabId: -1
+      });
+      // TODO: consider wiping cookies to ensure cart is empty
+      addItemToCart();
+    } else {
+      // keep checking until page is loaded
+      setTimeout(init, 1000);
+    }
   }
+
+  init();
 
   function addItemToCart() {
     console.log("addItemToCart()");
@@ -74,6 +81,7 @@
           }, 50);
         } else {
           // TODO keep in mind we also get here if add to cart is disabled
+          // ideally we want to detect if desired size is not found separately
           console.log("size not found");
         }
       }

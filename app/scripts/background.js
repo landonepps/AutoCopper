@@ -5,6 +5,7 @@ import 'chromereload/devonly';
 var libs = ["libs/jquery.min.js", "libs/sjcl.js"];
 
 chrome.webNavigation.onCompleted.addListener((e) => {
+  console.log("normal load")
   injectScripts(e.tabId, getScripts(e));
 }, {
   url: [{
@@ -13,7 +14,12 @@ chrome.webNavigation.onCompleted.addListener((e) => {
 });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener((e) => {
-  injectScripts(e.tabId, getScripts(e));
+  console.log("pushState load:" + e.url);
+  // only inject the scripts if the current url is the same as the transition
+  // I don't know why this event is fired twice, but this only injects on the second one
+  chrome.tabs.get(e.tabId, (tab) => {
+    if (e.url === tab.url) injectScripts(e.tabId, getScripts(e));
+  });
 }, {
   url: [{
     hostSuffix: "supremenewyork.com"
@@ -76,8 +82,8 @@ function getScripts(e) {
     scripts.push("scripts/checkout.js");
   }
 
-  // then load header
-  scripts.push("scripts/header.js");
+  // // then load header
+  // scripts.push("scripts/header.js");
 
   return scripts;
 }

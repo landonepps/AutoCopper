@@ -4,6 +4,7 @@ var userInfoFields = ["lastName", "firstName", "email", "phone",
                   "state", "city", "address", "zip",
                   "cardType", "card", "expMonth", "expYear", "cvv"];
 
+// TODO: the states don't appear on the first time the extension is loaded
 var regionInfo = {
   "jp": {
     "states": ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
