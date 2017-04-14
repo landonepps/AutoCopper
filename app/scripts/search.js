@@ -1,19 +1,31 @@
 'use strict';
 
-(function() {
+(function () {
   var shopUrl = 'http://www.supremenewyork.com';
   var mobileUrl = 'http://www.supremenewyork.com/mobile';
   var stockUrl = 'http://www.supremenewyork.com/mobile_stock.json';
 
   let DELAY = 150;
-  let INTERVAL = 5000;
+  let CHECK_INTERVAL = 1500;
 
   var itemRegex;
   var colorRegex;
   var desiredSize;
   var searchTabId;
 
-  startSearch();
+  // rudimentary delay waiting for 11:00 local time
+  var d = new Date();
+  var dropTime = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 0, 0, 0);
+  // if (dropTime - d > 0) {
+  //   // if it's not already past 11 today
+  //   console.log(dropTime - d);
+  // setTimeout(startSearch, dropTime - d);
+  // } else {
+  //   // wait till 11 tomorrow.
+  //   dropTime = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, 11, 0, 0, 0);
+  //   setTimeout(startSearch, dropTime - d);
+  // }
+  setTimeout(startSearch, dropTime - d);
 
   function startSearch() {
     chrome.storage.local.get(['options', 'prevLinks', 'searchTabId'], results => {
@@ -141,7 +153,7 @@
           qty: 1
         },
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
           var item;
           for (var i = 0; i < data.length; i++) {
             console.log(typeof data[i].size_id);
@@ -206,7 +218,7 @@
             // setTimeout(() => {window.location.href = mobileUrl + "#checkout"}, DELAY);
           });
         },
-        error: function() {
+        error: function () {
           console.log("Error adding item to cart")
         }
       });
@@ -215,7 +227,7 @@
 
   function tryAgain(msg) {
 
-    console.log(`${msg ? msg + " " : ""}Trying again in ${INTERVAL}ms`);
-    setTimeout(startSearch, INTERVAL);
+    console.log(`${msg ? msg + " " : ""}Trying again in ${CHECK_INTERVAL}ms`);
+    setTimeout(startSearch, CHECK_INTERVAL);
   }
 }());

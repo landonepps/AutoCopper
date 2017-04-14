@@ -1,16 +1,17 @@
 'use strict';
 
-jQuery.extend (
-    jQuery.expr[':'].containsCI = function (a, i, m) {
-        //-- faster than jQuery(a).text()
-        var sText   = (a.textContent || a.innerText || "");
-        var zRegExp = new RegExp (m[3], 'i');
-        return zRegExp.test (sText);
-    }
+jQuery.extend(
+  jQuery.expr[':'].containsCI = function (a, i, m) {
+    //-- faster than jQuery(a).text()
+    var sText = (a.textContent || a.innerText || "");
+    var zRegExp = new RegExp(m[3], 'i');
+    return zRegExp.test(sText);
+  }
 );
 
-(function() {
+(function () {
   let shopUrl = "http://www.supremenewyork.com";
+  let DELAY = 1700;
 
   function fillInfo(selector, data) {
     return {
@@ -33,8 +34,8 @@ jQuery.extend (
       var options = results.options;
 
       // decrypt the card number and cvv
-      userInfo["card"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */ , userInfo["card"]);
-      userInfo["cvv"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */ , userInfo["cvv"]);
+      userInfo["card"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["card"]);
+      userInfo["cvv"] = sjcl.decrypt( /* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["cvv"]);
 
       var fills = {
         "jp": [
@@ -99,8 +100,11 @@ jQuery.extend (
           });
 
           // trigger change event to update mask (unmask().mask("9999 9999..."))
-          document.getElementById("credit_card_type").dispatchEvent(changeEvent);
-          document.getElementById("order_tl").dispatchEvent(pasteEvent);
+          // TODO: get these IDs automagically ** they change (order_tel <-> order_tl)
+          var cardTypeField = document.getElementById("credit_card_type")
+          if (cardTypeField) cardTypeField.dispatchEvent(changeEvent);
+          var telField = document.getElementById("order_tel")
+          if (telField) telField.dispatchEvent(pasteEvent);
 
         } else {
           console.log("checkout info not set");
@@ -108,9 +112,13 @@ jQuery.extend (
 
         // TODO: detect when checkout failed and don't continue refreshing
         if (options !== undefined) {
+          console.log("seeing if checkout enabled");
           if (options.checkoutEnabled === true) {
-            console.log("completing checkout");
-            $("input[name*=commit]").click();
+            console.log("checkout enabled");
+            setTimeout(() => {
+              console.log("completing checkout");
+              $("input[name*=commit]").click();
+            }, DELAY);
           }
         }
       }
