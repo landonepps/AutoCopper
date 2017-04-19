@@ -1,12 +1,12 @@
 'use strict';
 
 (function() {
-  let shopUrl = "http://www.supremenewyork.com/";
+  const shopUrl = "http://www.supremenewyork.com/";
 
   var itemRegex;
   var colorRegex;
-  var itemSelector = '[itemprop="name"]:first';
-  var colorSelector = '[itemprop="model"]:first';
+  const itemSelector = '[itemprop="name"]:first';
+  const colorSelector = '[itemprop="model"]:first';
   var isNewSearch;
   var prevLinks;
   var searchTabId;

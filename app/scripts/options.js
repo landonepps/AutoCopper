@@ -1,11 +1,10 @@
 'use strict';
 
-var userInfoFields = ["lastName", "firstName", "email", "phone",
+const userInfoFields = ["lastName", "firstName", "email", "phone",
                   "state", "city", "address", "zip",
                   "cardType", "card", "expMonth", "expYear", "cvv"];
 
-// TODO: the states don't appear on the first time the extension is loaded
-var regionInfo = {
+const regionInfo = {
   "jp": {
     "states": ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
     "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県",
@@ -101,10 +100,10 @@ function restore_options() {
     var userInfo = results.userInfo;
     var region = results.region;
 
-    if (!userInfo) return;
     if (!region) region = "jp";
-
     setRegion(region);
+
+    if (!userInfo) return;
 
     userInfo["card"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["card"]);
     userInfo["cvv"] = sjcl.decrypt(/* @mangle */ 'vSfxY4tKkguBqGCH2U7eA2rm' /* @/mangle */, userInfo["cvv"]);

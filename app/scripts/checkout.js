@@ -10,8 +10,8 @@ jQuery.extend(
 );
 
 (function () {
-  let shopUrl = "http://www.supremenewyork.com";
-  let DELAY = 1700;
+  const shopUrl = "http://www.supremenewyork.com";
+  const DELAY = 1700;
 
   function fillInfo(selector, data) {
     return {
@@ -71,21 +71,30 @@ jQuery.extend(
 
       if (options.autofillEnabled === true) {
         if (userInfo !== undefined) {
-          // check the terms
+          // check the terms and conditions box
           $(".terms .icheckbox_minimal").addClass("checked");
           $("input[id*='terms']").prop('checked', true);
 
+          // if ($(document.body).hasClass("japan")) {
+          //   for (var i = 0; i < fills.jp.length; i++) {
+          //     $(fills.jp[i].selector).val(fills.jp[i].data);
+          //   }
+          // } else {
+          //   // TODO need 2nd address for america (maybe more for europe/CA?)
+          //   for (var i = 0; i < fills.am.length; i++) {
+          //     $(fills.am[i].selector).val(fills.am[i].data);
+          //   }
+          // }
+          var countryCode;
           if ($(document.body).hasClass("japan")) {
-            for (var i = 0; i < fills.jp.length; i++) {
-              $(fills.jp[i].selector).val(fills.jp[i].data);
-            }
+            countryCode = "jp";
           } else {
-            // TODO need 2nd address for america (maybe more for europe/CA?)
-            for (var i = 0; i < fills.am.length; i++) {
-              $(fills.am[i].selector).val(fills.am[i].data);
-            }
+            countryCode = "am";
           }
 
+          for (var i = 0; i < fills[countryCode].length; i++) {
+            $(fills[countryCode][i].selector).val(fills[countryCode][i].data);
+          }
 
           var changeEvent = new UIEvent("change", {
             "view": window,
@@ -100,10 +109,22 @@ jQuery.extend(
           });
 
           // trigger change event to update mask (unmask().mask("9999 9999..."))
-          // TODO: get these IDs automagically ** they change (order_tel <-> order_tl)
-          var cardTypeField = document.getElementById("credit_card_type")
+          var cardTypeID;
+          if (countryCode = "jp") {
+            cardTypeID = $(fills[countryCode][8].selector).attr('id');
+          } else { //if (countryCode = "am") {
+            cardTypeID = $(fills[countryCode][7].selector).attr('id');
+          }
+          var cardTypeField = document.getElementById(cardTypeID);
           if (cardTypeField) cardTypeField.dispatchEvent(changeEvent);
-          var telField = document.getElementById("order_tel")
+
+          var telId;
+          if (countryCode = "jp") {
+            telId = $(fills[countryCode][3].selector).attr('id');
+          } else { //if (countryCode = "am") {
+            telId = $(fills[countryCode][2].selector).attr('id');
+          }
+          var telField = document.getElementById(telId);
           if (telField) telField.dispatchEvent(pasteEvent);
 
         } else {

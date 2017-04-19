@@ -1,8 +1,8 @@
 'use strict';
 
-let searchUrl = "http://www.supremenewyork.com/shop/all";
+const searchUrl = "http://www.supremenewyork.com/shop/all";
 
-var userInfoFields = ["keyword", "color", "searchEnabled"];
+const userInfoFields = ["keyword", "color", "searchEnabled"];
 
 function hyphenate(text) {
   return text.replace(/([a-z][A-Z])/g, g => {

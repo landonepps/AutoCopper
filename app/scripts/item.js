@@ -3,7 +3,8 @@
 //TODO: when I load the item page from a search tab, I should stop the search
 
 (function () {
-  let shopUrl = "http://www.supremenewyork.com";
+  const shopUrl = "http://www.supremenewyork.com";
+  const DELAY = 1000;
 
   var init = () => {
     if ($(document.body).hasClass("show")) {
@@ -17,7 +18,7 @@
       addItemToCart();
     } else {
       // keep checking until page is loaded
-      setTimeout(init, 1000);
+      setTimeout(init, DELAY);
     }
   }
 

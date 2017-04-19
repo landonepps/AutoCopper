@@ -1,21 +1,21 @@
 'use strict';
 
 (function () {
-  var shopUrl = 'http://www.supremenewyork.com';
-  var mobileUrl = 'http://www.supremenewyork.com/mobile';
-  var stockUrl = 'http://www.supremenewyork.com/mobile_stock.json';
+  const shopUrl = 'http://www.supremenewyork.com';
+  const mobileUrl = 'http://www.supremenewyork.com/mobile';
+  const stockUrl = 'http://www.supremenewyork.com/mobile_stock.json';
 
-  let DELAY = 150;
-  let CHECK_INTERVAL = 1500;
+  const DELAY = 150;
+  const CHECK_INTERVAL = 1500;
 
-  var itemRegex;
-  var colorRegex;
-  var desiredSize;
-  var searchTabId;
+  let itemRegex;
+  let colorRegex;
+  let desiredSize;
+  let searchTabId;
 
   // rudimentary delay waiting for 11:00 local time
-  var d = new Date();
-  var dropTime = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 0, 0, 0);
+  let d = new Date();
+  let dropTime = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 0, 0, 0);
   // if (dropTime - d > 0) {
   //   // if it's not already past 11 today
   //   console.log(dropTime - d);
@@ -29,7 +29,7 @@
 
   function startSearch() {
     chrome.storage.local.get(['options', 'prevLinks', 'searchTabId'], results => {
-      var options = results.options;
+      let options = results.options;
       itemRegex = new RegExp(options.keyword, "i");
       colorRegex = new RegExp(options.color, "i");
       desiredSize = options.size;
@@ -56,15 +56,15 @@
           return;
         }
 
-        var allItems = [];
+        let allItems = [];
         Object.keys(data.products_and_categories).forEach((key, index) => {
-          var category = data.products_and_categories[key];
+          let category = data.products_and_categories[key];
           if (Array.isArray(category)) {
             allItems = allItems.concat(category);
           }
         });
 
-        var isFound = false;
+        let isFound = false;
 
         // check that the new items category exists
         if (allItems.length === 0) {
@@ -73,7 +73,7 @@
         }
 
         // find the desired item
-        for (var i = 0; i < allItems.length; i++) {
+        for (let i = 0; i < allItems.length; i++) {
           if (itemRegex.test(allItems[i].name)) {
             isFound = true;
             console.log(`Found product: ${allItems[i].name}`);
@@ -99,15 +99,15 @@
 
         console.log(data);
 
-        var styles = data.styles;
-        var isFound = false;
+        let styles = data.styles;
+        let isFound = false;
 
         if (styles === undefined) {
           console.log(`Error: ${product.id}.json doesn't contain array 'styles'`);
           return;
         }
 
-        for (var i = 0; i < styles.length; i++) {
+        for (let i = 0; i < styles.length; i++) {
           if (colorRegex.test(styles[i].name)) {
             console.log(`Found color: ${styles[i].name}`);
 
@@ -123,8 +123,8 @@
               break;
             }
 
-            for (var j = 0; j < styles[i].sizes.length; j++) {
-              var size = styles[i].sizes[j];
+            for (let j = 0; j < styles[i].sizes.length; j++) {
+              let size = styles[i].sizes[j];
               if (desiredSize === size.name) {
                 console.log(`Found size: ${size.name}`);
                 isFound = true;
@@ -139,7 +139,7 @@
   }
 
   function addItemToCart(productId, styleId, sizeId) {
-    var url = "/shop/" + productId + "/add.json";
+    let url = "/shop/" + productId + "/add.json";
 
     setTimeout(run, DELAY);
 
@@ -154,8 +154,8 @@
         },
         dataType: "json",
         success: function (data) {
-          var item;
-          for (var i = 0; i < data.length; i++) {
+          let item;
+          for (let i = 0; i < data.length; i++) {
             console.log(typeof data[i].size_id);
             console.log(typeof sizeId);
             if (data[i].size_id === sizeId.toString()) {
@@ -170,7 +170,7 @@
           }
 
           // great, now lets get access to the Supreme.app object
-          // var hackCode = `var o = {
+          // let hackCode = `let o = {
           //   apparel: ${productInfo.apparel},
           //   can_buy_multiple: ${productInfo.can_buy_multiple},
           //   canada_blocked: ${productInfo.canada_blocked},
@@ -201,7 +201,7 @@
           // Supreme.app.cart.getSizeFromLocalStorage(o.id);
           // localStorage.setItem(o.id + "_qty", 1); // only support adding 1 item
           // Supreme.app.cart.trigger("itemAdded")`;
-          // var script = document.createElement('script');
+          // let script = document.createElement('script');
           // script.textContent = hackCode;
           // (document.head || document.documentElement).appendChild(script);
           // script.remove();

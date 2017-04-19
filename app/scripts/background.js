@@ -2,7 +2,7 @@ import 'chromereload/devonly';
 
 'use strict';
 
-var libs = ["libs/jquery.min.js", "libs/sjcl.js"];
+const libs = ["libs/jquery.min.js", "libs/sjcl.js"];
 
 chrome.webNavigation.onCompleted.addListener((e) => {
   console.log("normal load")
