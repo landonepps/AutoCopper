@@ -53,9 +53,9 @@ function injectScripts(tabId, scripts) {
 
     console.log("injecting scripts " + scripts.join(","));
 
-    Promise.all(scripts.map(res => new Promise((resolve, reject) => {
+    Promise.all(scripts.map(file => new Promise((resolve, reject) => {
       chrome.tabs.executeScript(tabId, {
-        file: res,
+        file: file,
         runAt: "document_end"
       }, () => {
         if (chrome.runtime.lastError) {

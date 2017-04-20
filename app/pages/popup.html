@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <link href="../libs/bootstrap.min.css" rel="stylesheet">
+  <link href="../libs/font-awesome.min.css" rel="stylesheet">
   <link href="../styles/popup.css" rel="stylesheet">
 </head>
 
@@ -16,11 +17,11 @@
         <label for="size" class="col-xs-4">Size</label>
         <div class="col-xs-8">
           <select class="form-control form-control-sm" id="size">
-          <option>Small</option>
-          <option>Medium</option>
-          <option>Large</option>
-          <option>XLarge</option>
-        </select>
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+            <option>XLarge</option>
+          </select>
         </div>
       </div>
 
@@ -50,46 +51,32 @@
         </div>
       </fieldset>
 
-      <div class="form-group row text-xs-center">
-        <div class="col-xs-6">
-          <button id="save" class="btn btn-sm btn-primary btn-block">Save Options</button>
-        </div>
-        <div class="col-xs-6">
-          <button id="edit-info" class="btn btn-sm btn-outline-primary btn-block">Edit Checkout Info</button>
-        </div>
-      </div>
-
       <div class="card">
-        <div class="card-header text-xs-center" id="search-heading">
-          <h5 class="mb-0">
-            <a data-toggle="collapse" href="#search-form" id="search-toggle" aria-expanded="false" aria-controls="search-form">
-              Find &amp; Cop
-            </a>
-          </h5>
-        </div>
-        <div id="search-form" class="collapse" role="tabpanel" aria-labelledby="search-heading">
-          <div class="card-block">
-            <div class="form-group">
-              <div class="row">
-                <label for="keyword" class="col-xs-3 col-form-label col-form-label-sm">Keyword</label>
-                <div class="col-xs-9">
-                  <input class="form-control form-control-sm" id="keyword" type="text">
-                </div>
-              </div>
-              <div class="row">
-                <label for="color" class="col-xs-3 col-form-label col-form-label-sm">Color</label>
-                <div class="col-xs-9">
-                  <input class="form-control form-control-sm" id="color" type="text">
-                </div>
-              </div>
+        <div id="search-block" class="card-block">
+          <div id="search-fields">
+            <!-- placeholder -->
+          </div>
+          <div id="search-field-controls" class="form-group">
+            <div class="col-xs-5">
+              <button type="button" class="btn btn-outline-primary btn-sm" id="add-search-field">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-outline-primary btn-sm" id="remove-search-field">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+              </button>
             </div>
-            <div class="row text-xs-center">
-              <button id="search" class="btn btn-primary">Search</button>
+            <div class="col-xs-7">
+              <button type="button" id="search" class="btn btn-primary">Search</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <div class="form-group row text-xs-center">
+        <div class="col-xs-6 float-right">
+          <button type="button" id="edit-info" class="btn btn-sm btn-outline-primary btn-block">Edit Checkout Info</button>
+        </div>
+      </div>
     </div>
   </main>
 
