@@ -1,4 +1,4 @@
-import yargs from 'yargs';
+import yargs from 'yargs'
 
 const args = yargs
 
@@ -24,7 +24,7 @@ const args = yargs
     string: true,
     default: 'chrome',
     describe: 'Compile the extension for different vendors',
-    choices: ['chrome', 'firefox', 'opera']
+    choices: ['chrome', 'firefox', 'opera', 'edge']
   })
 
   .option('sourcemaps', {
@@ -35,9 +35,8 @@ const args = yargs
 
 // Use production flag for sourcemaps
 // as a fallback
-if(typeof args.sourcemaps === 'undefined'){
-  args.sourcemaps = !args.production;
+if (typeof args.sourcemaps === 'undefined') {
+  args.sourcemaps = !args.production
 }
 
-export default args;
-
+export default args
