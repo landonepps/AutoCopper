@@ -86,7 +86,7 @@
         } else {
           // TODO keep in mind we also get here if add to cart is disabled
           // ideally we want to detect if desired size is not found separately
-          console.log("size not found");
+          console.log("size not found (or add to cart disabled)");
         }
       }
     });
