@@ -1,5 +1,5 @@
 {
-  "name": "AutoCopper",
+  "name": "autocopper",
   "private": true,
   "version": "0.2.3",
   "description": "A Supreme bot.",
@@ -33,7 +33,7 @@
     "gulp-cache": "0.x.x",
     "gulp-clean-css": "2.x.x",
     "gulp-filter": "4.x.x",
-    "gulp-git": "1.x.x",
+    "gulp-git": "2.x.x",
     "gulp-if": "2.x.x",
     "gulp-imagemin": "3.x.x",
     "gulp-json-transform": "0.x.x",

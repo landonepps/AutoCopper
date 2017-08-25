@@ -75,16 +75,12 @@ jQuery.extend(
           $(".terms .icheckbox_minimal").addClass("checked");
           $("input[id*='terms']").prop('checked', true);
 
-          // if ($(document.body).hasClass("japan")) {
-          //   for (var i = 0; i < fills.jp.length; i++) {
-          //     $(fills.jp[i].selector).val(fills.jp[i].data);
-          //   }
-          // } else {
-          //   // TODO need 2nd address for america (maybe more for europe/CA?)
-          //   for (var i = 0; i < fills.am.length; i++) {
-          //     $(fills.am[i].selector).val(fills.am[i].data);
-          //   }
-          // }
+          // check save address
+          $(".store-address-checkbox .icheckbox_minimal").addClass("checked");
+          $("input[id*='_address']").prop('checked', true);
+
+          // TODO need 2nd address for america (maybe more for europe/CA?)
+
           var countryCode;
           if ($(document.body).hasClass("japan")) {
             countryCode = "jp";

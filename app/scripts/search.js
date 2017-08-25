@@ -15,7 +15,7 @@
 
   // rudimentary delay waiting for 10:59 local time
   let d = new Date();
-  let dropTime = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 59, 0, 0);
+  let dropTime = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 58, 0, 0);
   setTimeout(startSearch, dropTime - d);
 
   function startSearch() {
