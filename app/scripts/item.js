@@ -57,10 +57,13 @@
           }
         });
 
+        // verify that the selectors are working
+        if ($("fieldset > select").length === 0) {
+          console.warn('"fieldset select" selector returned no matches in item.js')
+        }
         // make sure the correct size is selected
-        if (options.addToCartEnabled &&
-          $("#size").length != 0 &&
-          $("#size").val() === sizeValue) {
+        else if (options.addToCartEnabled &&
+          $("fieldset > select").val() === sizeValue) {
 
           console.log("size matches, check out");
           $('input[type="submit"]').click();
@@ -74,12 +77,12 @@
               (itemsOriginallyInCart < parseInt($('#items-count').text()))) {
               console.log("added to cart!");
               clearInterval(cartCheck);
-              console.log("proceeding to checkout")
+              console.log("proceeding to checkout");
               window.location.href = shopUrl + "/checkout";
             } else {
               console.log("not yet added to cart");
             }
-          }, 50);
+          }, 500);
         } else {
           // TODO keep in mind we also get here if add to cart is disabled
           // ideally we want to detect if desired size is not found separately
