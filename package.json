@@ -1,7 +1,7 @@
 {
   "name": "autocopper",
   "private": true,
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "A browser extension to cop Supreme.",
   "scripts": {
     "start": "npm run dev:chrome",
