@@ -11,7 +11,7 @@ jQuery.extend(
 
 (function () {
   const shopUrl = "http://www.supremenewyork.com";
-  const DELAY = 1700;
+  const DELAY = 1000;
 
   function fillInfo(selector, data) {
     return {
@@ -21,13 +21,11 @@ jQuery.extend(
   }
 
   if ($(document.body).hasClass("checkout_page")) {
-    console.log("on checkout page");
+    console.log("checkout.js");
     checkout();
   }
 
   function checkout() {
-    console.log("filling out form");
-
     chrome.storage.local.get(['userInfo', 'options'], results => {
 
       var userInfo = results.userInfo;
@@ -70,6 +68,7 @@ jQuery.extend(
       }
 
       if (options.autofillEnabled === true) {
+        console.log("filling out form");
         if (userInfo !== undefined) {
           // check the terms and conditions box
           $(".terms .icheckbox_minimal").addClass("checked");
@@ -129,7 +128,7 @@ jQuery.extend(
 
         // TODO: detect when checkout failed and don't continue refreshing
         if (options !== undefined) {
-          console.log("seeing if checkout enabled");
+          console.log("seeing if auto-checkout enabled");
           if (options.checkoutEnabled === true) {
             console.log("checkout enabled");
             setTimeout(() => {

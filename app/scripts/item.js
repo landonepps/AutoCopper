@@ -8,7 +8,7 @@
 
   var init = () => {
     if ($(document.body).hasClass("show")) {
-      console.log("on item page");
+      console.log("item.js");
 
       // we want to stop the search (if running) when an item is loaded
       chrome.storage.local.set({
@@ -36,10 +36,6 @@
 
     // check if any items in cart
     if ($('#cart.hidden').length === 0) {
-      // var itemCountRegex = /([0-9]+) item.*/;
-      // itemsOriginallyInCart = Number(itemCountRegex.exec($('#items-count').text())[1]);
-
-      // no need to use regex after all
       itemsOriginallyInCart = parseInt($('#items-count').text());
       console.log(itemsOriginallyInCart);
     }
@@ -59,34 +55,33 @@
 
         // verify that the selectors are working
         if ($("fieldset > select").length === 0) {
-          console.warn('"fieldset select" selector returned no matches in item.js')
+          console.warn('"fieldset > select" selector returned no matches in item.js')
         }
         // make sure the correct size is selected
-        else if (options.addToCartEnabled &&
-          $("fieldset > select").val() === sizeValue) {
+        else if (options.addToCartEnabled) {
+          if ($("fieldset > select").val() === sizeValue) {
 
-          console.log("size matches, check out");
-          $('input[type="submit"]').click();
+            console.log("size matches, check out");
+            $('input[type="submit"]').click();
 
-          var cartCheck = setInterval(() => {
-            // cart.length will equal 0 if it is no longer hidden
-            var cart = $('#cart.hidden');
+            var cartCheck = setInterval(() => {
+              // cart.length will equal 0 if it is no longer hidden
+              var cart = $('#cart.hidden');
 
-            // if cart appeared, or the number of items in the cart increased
-            if ((itemsOriginallyInCart === 0 && cart.length === 0) ||
-              (itemsOriginallyInCart < parseInt($('#items-count').text()))) {
-              console.log("added to cart!");
-              clearInterval(cartCheck);
-              console.log("proceeding to checkout");
-              window.location.href = shopUrl + "/checkout";
-            } else {
-              console.log("not yet added to cart");
-            }
-          }, 500);
-        } else {
-          // TODO keep in mind we also get here if add to cart is disabled
-          // ideally we want to detect if desired size is not found separately
-          console.log("size not found (or add to cart disabled)");
+              // if cart appeared, or the number of items in the cart increased
+              if ((itemsOriginallyInCart === 0 && cart.length === 0) ||
+                (itemsOriginallyInCart < parseInt($('#items-count').text()))) {
+                console.log("added to cart!");
+                clearInterval(cartCheck);
+                console.log("proceeding to checkout");
+                window.location.href = shopUrl + "/checkout";
+              } else {
+                console.log("not yet added to cart");
+              }
+            }, 500);
+          } else {
+            console.log("size not found");
+          }
         }
       }
     });

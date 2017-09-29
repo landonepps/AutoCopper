@@ -3,7 +3,7 @@
 (function () {
   if ($(document.body).hasClass("view-all")) {
 
-    console.log("on view all page");
+    console.log("viewall.js");
 
     var timesToRepeat = 10;
     var keepChanging = () => {

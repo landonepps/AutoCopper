@@ -72,7 +72,10 @@ function injectScripts(tabId, scripts) {
 function getScripts(e) {
   var scripts = libs.slice();
 
-  if (e.url.indexOf("/all") != -1 || e.url.indexOf("/new") != -1) {
+  if (e.url.indexOf("/mobile") != -1) {
+    // if at mobile page
+    scripts.push("scripts/mobile-atc.js");
+  } else if (e.url.indexOf("/all") != -1 || e.url.indexOf("/new") != -1) {
     // if at view all page
     scripts.push("scripts/viewall.js");
   } else if (e.url.indexOf("shop/") != -1) {
