@@ -1,10 +1,18 @@
-# autocopper
+# AutoCopper
 
-A browser extension to cop Supreme.
+A cross-platform browser extension to help with Supreme drops.
+
+Originally I made it for my own personal use and did not intend to share it. There was already too many people using similar tools, and I didn't want to make the situation worse by releasing this for free.
+
+Since I'm no longer interested in Supreme and this extension isn't up to date, I've decided to make it public.
 
 ## Installation
 
 	$ npm install
+
+  If you get node-gyp errors, you may need to install automake.
+  
+	$ brew install libtool automake autoconf
 
 ## Usage
 
