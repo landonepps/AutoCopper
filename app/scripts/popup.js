@@ -57,7 +57,7 @@ function restore_options() {
       });
 
       OPTIONS.forEach((option, i) => {
-        document.getElementById(option).checked = options[field];
+        document.getElementById(option).checked = options[option];
       });
     }
   });
