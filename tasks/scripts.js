@@ -20,9 +20,9 @@ gulp.task('scripts', (cb) => {
     .pipe(gulpWebpack({
       devtool: args.sourcemaps ? 'inline-source-map' : false,
       watch: args.watch,
+      mode: ENV,
       plugins: [
         new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify(ENV),
           'process.env.VENDOR': JSON.stringify(args.vendor)
         })
       ].concat(args.production ? [
