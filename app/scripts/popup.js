@@ -19,7 +19,7 @@ function sendMessage(msg, callback) {
       chrome.tabs.sendMessage(tab.id, msg);
     });
     // we're finished saving, so it's callback time
-    if (callback) callback();
+    if (typeof callback === "function") callback();
   });
 }
 
@@ -39,7 +39,7 @@ function save_options(callback) {
   }, () => {
     // Can update status msg here to let user know options were saved.
     // sendMessage({ updateHeader: true }, callback);
-    // if (callback) callback();
+    if (typeof callback === "function") callback();
   });
 }
 
