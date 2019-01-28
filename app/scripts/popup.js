@@ -2,14 +2,15 @@
 
 const SEARCH_URL = "http://www.supremenewyork.com/shop/all";
 
-const USER_INFO_FIELDS = ["keyword", "color", "searchEnabled"];
-const BLANK_SEARCH = { keyword: "", color: "" };
+const FIELDS = ["size", "category", "keyword", "keycolor"];
+const OPTIONS = ["autofill", "checkout", "atc"];
+// const BLANK_SEARCH = { keyword: "", color: "" };
 
-function hyphenate(text) {
-  return text.replace(/([a-z][A-Z])/g, g => {
-    return g[0] + '-' + g[1].toLowerCase()
-  })
-}
+// function hyphenate(text) {
+//   return text.replace(/([a-z][A-Z])/g, g => {
+//     return g[0] + '-' + g[1].toLowerCase()
+//   })
+// }
 
 function sendMessage(msg, callback) {
   chrome.tabs.query({
@@ -28,10 +29,13 @@ function save_options(callback) {
 
   let newOptions = {};
 
-  newOptions["size"] = document.getElementById("size").value;
-  newOptions["autofillEnabled"] = document.getElementById("autofill-enabled").checked;
-  newOptions["checkoutEnabled"] = document.getElementById("checkout-enabled").checked;
-  newOptions["addToCartEnabled"] = document.getElementById("add-to-cart-enabled").checked;
+  FIELDS.forEach( (field, i) => {
+    newOptions[field] = document.getElementById(field).value;
+  });
+
+  OPTIONS.forEach((option, i) => {
+    newOptions[option] = document.getElementById(option).checked;
+  });
 
   // save to storage
   chrome.storage.local.set({
@@ -47,12 +51,14 @@ function restore_options() {
   chrome.storage.local.get(['options'], results => {
     let options = results.options;
     if (options !== undefined) {
-      document.getElementById("size").value = options["size"];
-      document.getElementById("autofill-enabled").checked = options["autofillEnabled"];
-      document.getElementById("checkout-enabled").checked = options["checkoutEnabled"];
-      document.getElementById("add-to-cart-enabled").checked = options["addToCartEnabled"];
 
-      build_search_fields();
+      FIELDS.forEach( (field, i) => {
+        document.getElementById(field).value = options[field];
+      });
+
+      OPTIONS.forEach((option, i) => {
+        document.getElementById(option).checked = options[field];
+      });
     }
   });
 }
@@ -63,10 +69,13 @@ function edit_info() {
   });
 }
 
-document.getElementById("size").addEventListener("change", save_options);
-document.getElementById("autofill-enabled").addEventListener("change", save_options);
-document.getElementById("checkout-enabled").addEventListener("change", save_options);
-document.getElementById("add-to-cart-enabled").addEventListener("change", save_options);
+FIELDS.forEach( (field, i) => {
+  document.getElementById(field).addEventListener("change", save_options);
+});
+
+OPTIONS.forEach((option, i) => {
+  document.getElementById(option).addEventListener("change", save_options);
+});
 
 document.getElementById('edit-info').addEventListener('click', edit_info);
 
