@@ -39,7 +39,7 @@ function save_options(callback) {
   }, () => {
     // Can update status msg here to let user know options were saved.
     // sendMessage({ updateHeader: true }, callback);
-    if (callback) callback();
+    // if (callback) callback();
   });
 }
 
@@ -52,7 +52,7 @@ function restore_options() {
       document.getElementById("checkout-enabled").checked = options["checkoutEnabled"];
       document.getElementById("add-to-cart-enabled").checked = options["addToCartEnabled"];
 
-      build_search_fields();
+      // build_search_fields();
     }
   });
 }
