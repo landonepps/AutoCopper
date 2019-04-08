@@ -2,7 +2,7 @@
 
 A cross-platform browser extension to help with Supreme drops.
 
-Originally I made it for my own personal use and did not intend to share it. There was already too many people using similar tools, and I didn't want to make the situation worse by releasing this for free.
+Originally I made it for my own personal use and did not intend to share it. There were already too many people using similar tools, and I didn't want to make the situation worse by releasing this for free.
 
 Since I'm no longer interested in Supreme and this extension isn't up to date, I've decided to make it public.
 
